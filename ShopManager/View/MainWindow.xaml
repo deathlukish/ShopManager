@@ -12,6 +12,7 @@
     </Window.DataContext>
     <Grid>
         <Button Content="Button" HorizontalAlignment="Left" Margin="252,176,0,0" VerticalAlignment="Top" Command="{Binding command}"/>
+        <DataGrid d:ItemsSource="{d:SampleData ItemCount=5}"/>
 
     </Grid>
 </Window>
