@@ -1,10 +1,4 @@
 ﻿using ShopManager.Command;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 
 namespace ShopManager.ViewModel
@@ -14,7 +8,12 @@ namespace ShopManager.ViewModel
 
         public ICommand command { get; }
         private bool CanClose(object p) => true;
-        private void OnClose(object p) => MessageBox.Show("re");
+        private void OnClose(object p)
+        {
+            CreateBase createBase = new();
+            createBase.CreateAccessBase();
+               
+        }
 
 
         public MainWindowViewModel()
