@@ -11,8 +11,24 @@
         <vm:MainWindowViewModel/>
     </Window.DataContext>
     <Grid>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="252,176,0,0" VerticalAlignment="Top" Command="{Binding command}"/>
-        <DataGrid d:ItemsSource="{d:SampleData ItemCount=5}"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="70*"></ColumnDefinition>
+            <ColumnDefinition Width="30*"></ColumnDefinition>
+            
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="95*"></RowDefinition>
+            <RowDefinition Height="5*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <UniformGrid Grid.Row="0" Grid.Column="1" Rows="3">
+            <Button Content="Button" Command="{Binding command}" Margin="5"/>
+            <Button  Content="Button" Command="{Binding command}" Margin="5"/>
+        </UniformGrid>
+        <StatusBar Grid.Row="1" Grid.ColumnSpan="3">
+            <TextBlock Text="Статус подключения"> </TextBlock>
+        </StatusBar>
+        <!--<Button  Content="Button" Grid.Column="1" Margin="5" Command="{Binding command}"/>-->
+        <DataGrid  Grid.Row="0" Grid.Column="0" Margin="5" d:ItemsSource="{d:SampleData ItemCount=5}"/>
 
     </Grid>
 </Window>
