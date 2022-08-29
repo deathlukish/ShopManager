@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,14 +13,25 @@ namespace ShopManager
 {
     internal class CreateBase
     {
-        public void CreateAccessBase()
+        
+        public void CreateAccessBase(Action<string> action)
         {
             string database = @".\AccessBase.accdb";
             const string dbLangGeneral = ";LANGID=0x0409;CP=1252;COUNTRY=0";
             var engine = new DBEngine();
-            var dbs = engine.CreateDatabase(database, dbLangGeneral);
-            dbs.Close();
-            
+            try
+            {
+                var dbs = engine.CreateDatabase(database, dbLangGeneral);
+                dbs.Close();
+                
+            }
+            catch (Exception e)
+            {
+                
+                action.Invoke(e.Message);
+                return;
+            }
+ 
             string connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + database + ";Persist Security Info=True"; ;
             OleDbConnection connection = null;
             OleDbCommand command1 = null;
@@ -34,9 +46,9 @@ namespace ShopManager
                 command1.ExecuteNonQuery();
                 command2.ExecuteNonQuery();
             }
-            catch (Exception exc)
+            catch (Exception e)
             {
-                MessageBox.Show("Ошибка " + exc.Message);
+                action.Invoke(e.Message);
             }
             finally
             {
@@ -47,6 +59,12 @@ namespace ShopManager
                 if (command2 != null)
                     command2.Dispose();
             }
+            action.Invoke("База успешно создана");
+        }
+        public void CreateSqlBase()
+        { 
+        
+        
         }
     }
 }

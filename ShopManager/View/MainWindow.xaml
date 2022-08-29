@@ -25,7 +25,7 @@
             <Button  Content="Button" Command="{Binding command}" Margin="5"/>
         </UniformGrid>
         <StatusBar Grid.Row="1" Grid.ColumnSpan="3">
-            <TextBlock Text="Статус подключения"> </TextBlock>
+            <TextBlock Text="{Binding StatusString}"> </TextBlock>
         </StatusBar>
         <!--<Button  Content="Button" Grid.Column="1" Margin="5" Command="{Binding command}"/>-->
         <DataGrid  Grid.Row="0" Grid.Column="0" Margin="5" d:ItemsSource="{d:SampleData ItemCount=5}"/>
