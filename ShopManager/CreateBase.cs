@@ -27,12 +27,12 @@ namespace ShopManager
             }
             catch (Exception e)
             {
-                
+               
                 action.Invoke(e.Message);
                 return;
             }
  
-            string connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + database + ";Persist Security Info=True"; ;
+            string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={database};Persist Security Info=True";
             OleDbConnection connection = null;
             OleDbCommand command1 = null;
             OleDbCommand command2 = null;
@@ -58,8 +58,9 @@ namespace ShopManager
                     command1.Dispose();
                 if (command2 != null)
                     command2.Dispose();
+                action.Invoke("База успешно создана");
             }
-            action.Invoke("База успешно создана");
+            
         }
         public void CreateSqlBase()
         { 

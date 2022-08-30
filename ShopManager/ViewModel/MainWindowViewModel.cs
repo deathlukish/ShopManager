@@ -17,8 +17,17 @@ namespace ShopManager.ViewModel
         private bool CanClose(object p) => true;
         private void OnClose(object p)
         {
-            CreateBase createBase = new();
-            createBase.CreateAccessBase(Message);
+            //CreateBase createBase = new();
+            //createBase.CreateAccessBase(Message);
+            ClientsBase clientsBase = new();
+            clientsBase.AddClient(new Client()
+                {
+                FirstName = "fds",
+                MiddleName = "sfsa",
+                LastName = "sadsdas",
+                NumPhone = "+3432423",
+                Email = "sda@aaa.ru"
+                });
                
         }
         private void Message(string a)
