@@ -41,7 +41,7 @@ namespace ShopManager
                 connection = new OleDbConnection(connectionString);
                 connection.Open();
                 command1 = new OleDbCommand("CREATE TABLE Clients(Id AUTOINCREMENT, FirstName CHAR(20) NOT NULL, MidleName CHAR(20) NOT NULL," +
-                    "LastName CHAR(20) NOT NULL, NumPhone CHAR(20), Email CHAR(20) NOT NULL)", connection);
+                    "LastName CHAR(20) NOT NULL, NumPhone CHAR(20), Email CHAR(20) NOT NULL UNIQUE)", connection);
                 command2 = new OleDbCommand("CREATE INDEX PrimaryKey ON Clients(Id) WITH PRIMARY", connection);
                 command1.ExecuteNonQuery();
                 command2.ExecuteNonQuery();
