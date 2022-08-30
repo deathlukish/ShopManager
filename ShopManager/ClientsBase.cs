@@ -1,15 +1,11 @@
-﻿using Azure.Messaging;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Data.OleDb;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace ShopManager
 {
-    
+
     internal class ClientsBase
     {
         private readonly string database = @".\AccessBase.accdb";
@@ -39,20 +35,48 @@ namespace ShopManager
             {
                 MessageBox.Show(e.Message);
             }
-            finally
+            //finally
+            //{
+            //    connection.Close();
+            //    connection.Dispose();
+            //    if (command1 != null)
+            //        command1.Dispose();
+
+            //}
+
+        }
+        public ObservableCollection<Client> GetClients()
+        {
+            OleDbCommand command1 = null;
+            var clients = new ObservableCollection<Client>();
+            string commandAdd = $"SELECT * FROM Clients";
+            try
             {
-                connection.Close();
-                connection.Dispose();
-                if (command1 != null)
-                    command1.Dispose();
+                command1 = new OleDbCommand(commandAdd, connection);
+                var a = command1.ExecuteReader();
+                while (a.Read())
+                {
+                    clients.Add(new Client
 
+                    {
+                        FirstName = a["Firstname"].ToString(),
+                        MiddleName = a["MidleName"].ToString(),
+                        LastName = a["LastName"].ToString(),
+                        NumPhone = a["NumPhone"].ToString(),
+                        Email = a["Email"].ToString(),
+                    });
+                }
             }
-
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+            }
+            return clients;
         }
 
     }
 
-    
-    
-    
+
+
+
 }
