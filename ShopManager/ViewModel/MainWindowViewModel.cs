@@ -1,5 +1,7 @@
 ﻿using ShopManager.Command;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -23,22 +25,32 @@ namespace ShopManager.ViewModel
         }
         public ICommand command { get; }
         private bool CanClose(object p) => true;
-        private void OnClose(object p)
+        private async void OnClose(object p)
         {
+
+            ClientsBase clientsBase = new();
+            Clients = await clientsBase.GetClients();
             //CreateBase createBase = new();
             //createBase.CreateAccessBase(Message);
-            ClientsBase clientsBase = new();
-            //clientsBase.AddClient(new Client()
-            //    {
-            //    FirstName = "fds",
-            //    MiddleName = "sfsa",
-            //    LastName = "sadsdas",
-            //    NumPhone = "+3432423",
-            //    Email = "sdaa@aaa.ru"
-            //    });
-            Clients = clientsBase.GetClients();
-               
+            Client client = new Client()
+            {
+                FirstName = "fds",
+                MiddleName = "sfsa",
+                LastName = "sadsdas",
+                NumPhone = "+3432423",
+                Email = "sdaa@ccc.ru"
+            };
+            //clientsBase.AddClient(client);
+            clientsBase.DelClient(client);
+
         }
+        public void AddClient()
+        {
+        
+        
+        }
+
+
         private void Message(string a)
         {
             StatusString = a;

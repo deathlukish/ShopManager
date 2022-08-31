@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data.OleDb;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace ShopManager
@@ -10,68 +11,109 @@ namespace ShopManager
     {
         private readonly string database = @".\AccessBase.accdb";
         private readonly string dbLangGeneral = ";LANGID=0x0409;CP=1252;COUNTRY=0";
-        private string connectionString;
-        private OleDbConnection connection;
+        private OleDbConnectionStringBuilder connectionString;
         public ClientsBase()
         {
-            connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={database};Persist Security Info=True";
-            connection = new OleDbConnection(connectionString);
-            connection.Open();
+            connectionString = new()
+            {
+                DataSource = database,
+                Provider = "Microsoft.ACE.OLEDB.12.0",
+                PersistSecurityInfo = true
+
+            };
+
+
         }
+        /// <summary>
+        /// Добавить клиента в базу
+        /// </summary>
+        /// <param name="client"></param>
         public void AddClient(Client client)
         {
-
             string commandAdd = $"INSERT INTO Clients(FirstName, MidleName, LastName, NumPhone, Email) VALUES ('{client.FirstName}'," +
                 $"'{client.MiddleName}','{client.LastName}','{client.NumPhone}','{client.Email}')";
-            OleDbCommand command1 = null;
             try
             {
+                using (OleDbConnection con = new OleDbConnection(connectionString.ConnectionString))
+                {
+                    con.Open();
+                    OleDbCommand command = new(commandAdd, con);
+                    command.ExecuteNonQuery();
 
-                command1 = new OleDbCommand(commandAdd, connection);
-                command1.ExecuteNonQuery();
+                }
 
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
-            }
-            //finally
-            //{
-            //    connection.Close();
-            //    connection.Dispose();
-            //    if (command1 != null)
-            //        command1.Dispose();
 
-            //}
+            }
 
         }
-        public ObservableCollection<Client> GetClients()
+        /// <summary>
+        /// Получить всех клиентов из базы
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ObservableCollection<Client>> GetClients()
         {
-            OleDbCommand command1 = null;
             var clients = new ObservableCollection<Client>();
-            string commandAdd = $"SELECT * FROM Clients";
+            string commandGet = $"SELECT * FROM Clients";
             try
             {
-                command1 = new OleDbCommand(commandAdd, connection);
-                var a = command1.ExecuteReader();
-                while (a.Read())
+                using (OleDbConnection con = new OleDbConnection(connectionString.ConnectionString))
                 {
-                    clients.Add(new Client
-
+                    con.Open();
+                    OleDbCommand command = new(commandGet, con);
+                    var a = command.ExecuteReader();
+                    while (a.Read())
                     {
-                        FirstName = a["Firstname"].ToString(),
-                        MiddleName = a["MidleName"].ToString(),
-                        LastName = a["LastName"].ToString(),
-                        NumPhone = a["NumPhone"].ToString(),
-                        Email = a["Email"].ToString(),
-                    });
+                        clients.Add(new Client
+
+                        {
+                            FirstName = a["Firstname"].ToString(),
+                            MiddleName = a["MidleName"].ToString(),
+                            LastName = a["LastName"].ToString(),
+                            NumPhone = a["NumPhone"].ToString(),
+                            Email = a["Email"].ToString(),
+                        });
+
+                    }
+
                 }
+
+            }
+            catch (Exception e)
+            {
+
+                MessageBox.Show(e.Message);
+
+            }
+            return clients;
+        }
+        /// <summary>
+        /// Удалить клиента
+        /// </summary>
+        /// <param name="ClienToDel"></param>
+        public void DelClient(Client ClienToDel)
+        {
+
+            string commandDel = $"DELETE FROM Clients WHERE Email = '{ClienToDel.Email}'";
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(connectionString.ConnectionString))
+                {
+                    con.Open();
+                    OleDbCommand command = new(commandDel, con);
+                    command.ExecuteNonQuery();
+                    
+                }
+
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
             }
-            return clients;
+
         }
 
     }

@@ -23,6 +23,7 @@ namespace ShopManager
         public MainWindow()
         {
             InitializeComponent();
+            
         }
     }
 }

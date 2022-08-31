@@ -16,6 +16,8 @@ namespace ShopManager
         
         public void CreateAccessBase(Action<string> action)
         {
+            
+            
             string database = @".\AccessBase.accdb";
             const string dbLangGeneral = ";LANGID=0x0409;CP=1252;COUNTRY=0";
             var engine = new DBEngine();
