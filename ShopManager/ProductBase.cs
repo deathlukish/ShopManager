@@ -14,7 +14,6 @@ namespace ShopManager
     internal class ProductBase
     {
         private readonly string database = @"(localdb)MSSQLLocalDB";
-        private readonly string dbLangGeneral = ";LANGID=0x0409;CP=1252;COUNTRY=0";
         private SqlConnectionStringBuilder connectionString;
         public ProductBase()
         {
@@ -56,29 +55,27 @@ namespace ShopManager
 
         }
         /// <summary>
-        /// Получить всех клиентов из базы
+        /// Получить все продукты клиента из базы
         /// </summary>
         /// <returns></returns>
-        public async Task<ObservableCollection<Client>> GetClients()
+        public ObservableCollection<Product> GetProducts(Client client)
         {
-            var clients = new ObservableCollection<Client>();
-            string commandGet = $"SELECT * FROM Clients";
+            var products = new ObservableCollection<Product>();
+            string commandGet = $"SELECT * FROM Products WHERE Email = '{client.Email}'";
             try
             {
-                using (OleDbConnection con = new OleDbConnection(connectionString.ConnectionString))
+                using (SqlConnection con = new SqlConnection(connectionString.ConnectionString))
                 {
                     con.Open();
-                    OleDbCommand command = new(commandGet, con);
+                    SqlCommand command = new(commandGet, con);
                     var a = command.ExecuteReader();
                     while (a.Read())
                     {
-                        clients.Add(new Client
+                        products.Add(new Product
                         {
-                            FirstName = a["Firstname"].ToString(),
-                            MiddleName = a["MidleName"].ToString(),
-                            LastName = a["LastName"].ToString(),
-                            NumPhone = a["NumPhone"].ToString(),
-                            Email = a["Email"].ToString(),
+                            IdProd = (int)a["IdProd"],
+                            NameProd = a["NameProd"].ToString(),
+                            
                         });
 
                     }
@@ -92,22 +89,22 @@ namespace ShopManager
                 MessageBox.Show(e.Message);
 
             }
-            return clients;
+            return products;
         }
         /// <summary>
-        /// Удалить клиента
+        /// Удалить продукт
         /// </summary>
         /// <param name="ClienToDel"></param>
-        public void DelClient(Client ClienToDel)
+        public void DelProduct(Product ProdToDel)
         {
 
-            string commandDel = $"DELETE FROM Clients WHERE Email = '{ClienToDel.Email}'";
+            string commandDel = $"DELETE FROM Products WHERE Email = '{ProdToDel.IdProd}'";
             try
             {
-                using (OleDbConnection con = new OleDbConnection(connectionString.ConnectionString))
+                using (SqlConnection con = new SqlConnection(connectionString.ConnectionString))
                 {
                     con.Open();
-                    OleDbCommand command = new(commandDel, con);
+                    SqlCommand command = new(commandDel, con);
                     command.ExecuteNonQuery();
 
                 }

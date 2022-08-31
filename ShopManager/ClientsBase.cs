@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using System;
 using System.Collections.ObjectModel;
+using System.Data;
+using System.Data.Common;
 using System.Data.OleDb;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +15,8 @@ namespace ShopManager
         private readonly string database = @".\AccessBase.accdb";
         private readonly string dbLangGeneral = ";LANGID=0x0409;CP=1252;COUNTRY=0";
         private OleDbConnectionStringBuilder connectionString;
+        private DataTable dt;
+        private OleDbDataAdapter da;
         public ClientsBase()
         {
             connectionString = new()
@@ -24,6 +29,19 @@ namespace ShopManager
 
 
         }
+
+        public DataTable Prepear()
+        {
+            OleDbConnection con = new OleDbConnection(connectionString.ConnectionString);
+            dt = new();
+            da = new OleDbDataAdapter();
+            string commandGet = $"SELECT * FROM Clients";
+            da.SelectCommand = new OleDbCommand(commandGet, con);
+            da.Fill(dt);
+            return dt;
+
+        }
+
         /// <summary>
         /// Добавить клиента в базу
         /// </summary>
