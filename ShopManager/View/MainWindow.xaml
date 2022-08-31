@@ -30,6 +30,7 @@
         <!--<Button  Content="Button" Grid.Column="1" Margin="5" Command="{Binding command}"/>-->
         <DataGrid   
             
+             SelectedItem="{Binding SelectedClient}"
              AutoGenerateColumns="True"
              IsReadOnly="False"
              CanUserAddRows="True"

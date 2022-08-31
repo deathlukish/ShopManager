@@ -68,7 +68,6 @@ namespace ShopManager
                     while (a.Read())
                     {
                         clients.Add(new Client
-
                         {
                             FirstName = a["Firstname"].ToString(),
                             MiddleName = a["MidleName"].ToString(),

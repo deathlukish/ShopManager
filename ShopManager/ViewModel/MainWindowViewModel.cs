@@ -1,7 +1,5 @@
 ﻿using ShopManager.Command;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -11,6 +9,7 @@ namespace ShopManager.ViewModel
     {
         private string _statusString;
         private ObservableCollection<Client> _clients;
+        private Client _selectedClient;
         public string StatusString
         {
 
@@ -22,6 +21,15 @@ namespace ShopManager.ViewModel
             get => _clients;
             set=>Set(ref _clients, value);
         
+        }
+        public Client SelectedClient
+        {
+            get => _selectedClient;
+            set
+            {
+                Set(ref _selectedClient, value);
+                MessageBox.Show(SelectedClient.Email);
+            }
         }
         public ICommand command { get; }
         private bool CanClose(object p) => true;
