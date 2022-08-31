@@ -36,21 +36,27 @@ namespace ShopManager.ViewModel
         private async void OnClose(object p)
         {
 
-            ClientsBase clientsBase = new();
-            Clients = await clientsBase.GetClients();
+            //ClientsBase clientsBase = new();
+            //Clients = await clientsBase.GetClients();
             //CreateBase createBase = new();
             //createBase.CreateAccessBase(Message);
-            Client client = new Client()
-            {
-                FirstName = "fds",
-                MiddleName = "sfsa",
-                LastName = "sadsdas",
-                NumPhone = "+3432423",
-                Email = "sdaa@ccc.ru"
-            };
+            //Client client = new Client()
+            //{
+            //    FirstName = "fds",
+            //    MiddleName = "sfsa",
+            //    LastName = "sadsdas",
+            //    NumPhone = "+3432423",
+            //    Email = "sdaa@ccc.ru"
+            //};
             //clientsBase.AddClient(client);
-            clientsBase.DelClient(client);
-
+            //clientsBase.DelClient(client);
+            ProductBase product = new();
+            product.AddProduct(new Product
+            {
+                Email = "sdaa@ccc.ru",
+                IdProd = 24,
+                NameProd = "dfsdfsdfs"
+            });
         }
         public void AddClient()
         {
