@@ -39,7 +39,7 @@
              Grid.Row="0" 
              Grid.Column="0" 
              Margin="5" 
-             ItemsSource="{Binding DataTable}" 
+             ItemsSource="{Binding DataTableClient}" 
            ></DataGrid>
         <DataGrid               
              
@@ -51,7 +51,7 @@
              Grid.Row="1" 
              Grid.Column="0" 
              Margin="5" 
-             ItemsSource="{Binding DataTable}" 
+             
                          ></DataGrid>
 
     </Grid>

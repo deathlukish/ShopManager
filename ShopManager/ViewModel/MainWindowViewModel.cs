@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ShopManager.ViewModel
@@ -44,7 +45,7 @@ namespace ShopManager.ViewModel
             get => _products;
             set => Set(ref _products, value);
         }
-        public DataTable DataTable
+        public DataTable DataTableClient
         {
             get => _dataTable;
             set => Set(ref _dataTable, value);
@@ -88,7 +89,8 @@ namespace ShopManager.ViewModel
         private bool CanDelCLient(object p) => true;
         private void OnDelClient(object p)
         {
-            DataTable.Rows.Remove(SelectedClient.Row);
+            
+            SelectedClient.Row.Delete();            
             clientsBase.Save();
 
         }
@@ -115,11 +117,16 @@ namespace ShopManager.ViewModel
         public MainWindowViewModel()
         {
             clientsBase = new();
-            DataTable = clientsBase.TestSet();
+            DataTableClient = clientsBase.PrepeareBaseForUi();
             command = new RelayCommand(OnClose, CanClose);
             DelClient = new RelayCommand(OnDelClient, CanDelCLient);
             //DataTable.RowChanged += DataTable_RowChanged;
+            DataTableClient.RowDeleted += DataTable_RowDeleted;
         }
 
+        private void DataTable_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            MessageBox.Show("dfs");
+        }
     }
 }

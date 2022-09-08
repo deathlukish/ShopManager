@@ -23,6 +23,7 @@ namespace ShopManager
         {
             ds = new DataSet();
             da = new OleDbDataAdapter();
+            dt = new DataTable();
             commandBuilder = new OleDbCommandBuilder(da);
             connectionString = new()
             {
@@ -34,30 +35,20 @@ namespace ShopManager
 
 
         }
-        public DataTable TestSet()
-        {
-            
-            string commandGet = $"SELECT * FROM Clients";         
-            OleDbConnection con = new OleDbConnection(connectionString.ConnectionString);
-            da.SelectCommand = new OleDbCommand(commandGet, con);
-            da.Fill(ds);
-            dt = ds.Tables[0];
-            return dt;
-        }
         public void Save()
         {
-            da.Update(ds);
+
+            da.Update(dt);
             MessageBox.Show(commandBuilder.GetDeleteCommand().CommandText);
         }
 
-        public DataTable Prepear()
+        public DataTable PrepeareBaseForUi()
         {
-            OleDbConnection con = new OleDbConnection(connectionString.ConnectionString);
-            dt = new();
-            da = new OleDbDataAdapter();
+            OleDbConnection con = new OleDbConnection(connectionString.ConnectionString);            
             string commandGet = $"SELECT * FROM Clients";
             da.SelectCommand = new OleDbCommand(commandGet, con);
-            da.Fill(dt);
+            da.Fill(ds);
+            dt = ds.Tables[0];
             return dt;
 
         }
@@ -66,92 +57,92 @@ namespace ShopManager
         /// Добавить клиента в базу
         /// </summary>
         /// <param name="client"></param>
-        public void AddClient(Client client)
-        {
-            string commandAdd = $"INSERT INTO Clients(FirstName, MidleName, LastName, NumPhone, Email) VALUES ('{client.FirstName}'," +
-                $"'{client.MiddleName}','{client.LastName}','{client.NumPhone}','{client.Email}')";
-            try
-            {
-                using (OleDbConnection con = new OleDbConnection(connectionString.ConnectionString))
-                {
-                    con.Open();
-                    OleDbCommand command = new(commandAdd, con);
-                    command.ExecuteNonQuery();
+        //public void AddClient(Client client)
+        //{
+        //    string commandAdd = $"INSERT INTO Clients(FirstName, MidleName, LastName, NumPhone, Email) VALUES ('{client.FirstName}'," +
+        //        $"'{client.MiddleName}','{client.LastName}','{client.NumPhone}','{client.Email}')";
+        //    try
+        //    {
+        //        using (OleDbConnection con = new OleDbConnection(connectionString.ConnectionString))
+        //        {
+        //            con.Open();
+        //            OleDbCommand command = new(commandAdd, con);
+        //            command.ExecuteNonQuery();
 
-                }
+        //        }
 
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        MessageBox.Show(e.Message);
 
-            }
+        //    }
 
-        }
-        /// <summary>
-        /// Получить всех клиентов из базы
-        /// </summary>
-        /// <returns></returns>
-        public async Task<ObservableCollection<Client>> GetClients()
-        {
-            var clients = new ObservableCollection<Client>();
-            string commandGet = $"SELECT * FROM Clients";
-            try
-            {
-                using (OleDbConnection con = new OleDbConnection(connectionString.ConnectionString))
-                {
-                    con.Open();
-                    OleDbCommand command = new(commandGet, con);
-                    var a = command.ExecuteReader();
-                    while (a.Read())
-                    {
-                        clients.Add(new Client
-                        {
-                            FirstName = a["Firstname"].ToString(),
-                            MiddleName = a["MidleName"].ToString(),
-                            LastName = a["LastName"].ToString(),
-                            NumPhone = a["NumPhone"].ToString(),
-                            Email = a["Email"].ToString(),
-                        });
+        //}
+        ///// <summary>
+        ///// Получить всех клиентов из базы
+        ///// </summary>
+        ///// <returns></returns>
+        //public async Task<ObservableCollection<Client>> GetClients()
+        //{
+        //    var clients = new ObservableCollection<Client>();
+        //    string commandGet = $"SELECT * FROM Clients";
+        //    try
+        //    {
+        //        using (OleDbConnection con = new OleDbConnection(connectionString.ConnectionString))
+        //        {
+        //            con.Open();
+        //            OleDbCommand command = new(commandGet, con);
+        //            var a = command.ExecuteReader();
+        //            while (a.Read())
+        //            {
+        //                clients.Add(new Client
+        //                {
+        //                    FirstName = a["Firstname"].ToString(),
+        //                    MiddleName = a["MidleName"].ToString(),
+        //                    LastName = a["LastName"].ToString(),
+        //                    NumPhone = a["NumPhone"].ToString(),
+        //                    Email = a["Email"].ToString(),
+        //                });
 
-                    }
+        //            }
 
-                }
+        //        }
 
-            }
-            catch (Exception e)
-            {
+        //    }
+        //    catch (Exception e)
+        //    {
 
-                MessageBox.Show(e.Message);
+        //        MessageBox.Show(e.Message);
 
-            }
-            return clients;
-        }
-        /// <summary>
-        /// Удалить клиента
-        /// </summary>
-        /// <param name="ClienToDel"></param>
-        public void DelClient(Client ClienToDel)
-        {
+        //    }
+        //    return clients;
+        //}
+        ///// <summary>
+        ///// Удалить клиента
+        ///// </summary>
+        ///// <param name="ClienToDel"></param>
+        //public void DelClient(Client ClienToDel)
+        //{
 
-            string commandDel = $"DELETE FROM Clients WHERE Email = '{ClienToDel.Email}'";
-            try
-            {
-                using (OleDbConnection con = new OleDbConnection(connectionString.ConnectionString))
-                {
-                    con.Open();
-                    OleDbCommand command = new(commandDel, con);
-                    command.ExecuteNonQuery();
+        //    string commandDel = $"DELETE FROM Clients WHERE Email = '{ClienToDel.Email}'";
+        //    try
+        //    {
+        //        using (OleDbConnection con = new OleDbConnection(connectionString.ConnectionString))
+        //        {
+        //            con.Open();
+        //            OleDbCommand command = new(commandDel, con);
+        //            command.ExecuteNonQuery();
                     
-                }
+        //        }
 
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        MessageBox.Show(e.Message);
+        //    }
 
-        }
+        //}
 
     }
 
