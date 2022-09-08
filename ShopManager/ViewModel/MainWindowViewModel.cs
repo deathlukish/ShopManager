@@ -14,8 +14,10 @@ namespace ShopManager.ViewModel
         private DataTable _dataTable;
         private string _statusString;
         private ObservableCollection<Client> _clients;
-        private Client _selectedClient;
+        private DataRowView _selectedClient;
         private ObservableCollection<Product> _products;
+        private DataSet _dataSet;
+        private ClientsBase clientsBase;
         public string StatusString
         {
 
@@ -28,14 +30,13 @@ namespace ShopManager.ViewModel
             set=>Set(ref _clients, value);
         
         }
-        public Client SelectedClient
+        public DataRowView SelectedClient
         {
             get => _selectedClient;
             set
             {
                 Set(ref _selectedClient, value);
-                ProductBase productBase = new();
-                Products = productBase.GetProducts(SelectedClient);
+                
             }
         }
         public ObservableCollection<Product> Products
@@ -48,33 +49,56 @@ namespace ShopManager.ViewModel
             get => _dataTable;
             set => Set(ref _dataTable, value);
         }
+        public DataSet DataSetClient
+        {
+            get => _dataSet;
+            set => Set(ref _dataSet, value);
+        
+        }
         public ICommand command { get; }
         private bool CanClose(object p) => true;
         private async void OnClose(object p)
         {
 
-            ClientsBase clientsBase = new();
-            Clients = await clientsBase.GetClients();
-            CreateBase createBase = new();
-            createBase.CreateAccessBase(Message);
-            Client client = new Client()
-            {
-                FirstName = "fds",
-                MiddleName = "sfsa",
-                LastName = "sadsdas",
-                NumPhone = "+3432423",
-                Email = "sdaa@ccc.ru"
-            };
-            clientsBase.AddClient(client);
-            //clientsBase.DelClient(client);
-            ProductBase product = new();
-            product.AddProduct(new Product
-            {
-                Email = "sdaa@ccc.ru",
-                IdProd = 24,
-                NameProd = "dfsdfsdfs"
-            });
+            //ClientsBase clientsBase = new();
+            //Clients = await clientsBase.GetClients();
+            //CreateBase createBase = new();
+            //createBase.CreateAccessBase(Message);
+            //Client client = new Client()
+            //{
+            //    FirstName = "fds",
+            //    MiddleName = "sfsa",
+            //    LastName = "sadsdas",
+            //    NumPhone = "+3432423",
+            //    Email = "sdaa@ccc.ru"
+            //};
+            //clientsBase.AddClient(client);
+            ////clientsBase.DelClient(client);
+            //ProductBase product = new();
+            //product.AddProduct(new Product
+            //{
+            //    Email = "sdaa@ccc.ru",
+            //    IdProd = 24,
+            //    NameProd = "dfsdfsdfs"
+            //});
+            //DataTable =  clientsBase.TestSet();
+            clientsBase.Save();
         }
+        public ICommand DelClient { get; }
+        private bool CanDelCLient(object p) => true;
+        private void OnDelClient(object p)
+        {
+            DataTable.Rows.Remove(SelectedClient.Row);
+            clientsBase.Save();
+
+        }
+
+        private void DataTable_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            MessageBox.Show("fsd");
+            clientsBase.Save();
+        }
+
         public void AddClient()
         {
         
@@ -90,10 +114,11 @@ namespace ShopManager.ViewModel
 
         public MainWindowViewModel()
         {
-            ClientsBase clientsBase = new();
-            DataTable = clientsBase.Prepear();
+            clientsBase = new();
+            DataTable = clientsBase.TestSet();
             command = new RelayCommand(OnClose, CanClose);
-        
+            DelClient = new RelayCommand(OnDelClient, CanDelCLient);
+            //DataTable.RowChanged += DataTable_RowChanged;
         }
 
     }

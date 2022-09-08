@@ -13,12 +13,17 @@ namespace ShopManager
     internal class ClientsBase
     {
         private readonly string database = @".\AccessBase.accdb";
-        private readonly string dbLangGeneral = ";LANGID=0x0409;CP=1252;COUNTRY=0";
+        //private readonly string dbLangGeneral = ";LANGID=0x0409;CP=1252;COUNTRY=0";
         private OleDbConnectionStringBuilder connectionString;
         private DataTable dt;
         private OleDbDataAdapter da;
+        private DataSet ds;
+        private OleDbCommandBuilder commandBuilder;
         public ClientsBase()
         {
+            ds = new DataSet();
+            da = new OleDbDataAdapter();
+            commandBuilder = new OleDbCommandBuilder(da);
             connectionString = new()
             {
                 DataSource = database,
@@ -28,6 +33,21 @@ namespace ShopManager
             };
 
 
+        }
+        public DataTable TestSet()
+        {
+            
+            string commandGet = $"SELECT * FROM Clients";         
+            OleDbConnection con = new OleDbConnection(connectionString.ConnectionString);
+            da.SelectCommand = new OleDbCommand(commandGet, con);
+            da.Fill(ds);
+            dt = ds.Tables[0];
+            return dt;
+        }
+        public void Save()
+        {
+            da.Update(ds);
+            MessageBox.Show(commandBuilder.GetDeleteCommand().CommandText);
         }
 
         public DataTable Prepear()

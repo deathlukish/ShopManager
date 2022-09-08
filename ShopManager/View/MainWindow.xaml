@@ -23,7 +23,7 @@
         </Grid.RowDefinitions>
         <UniformGrid Grid.Row="0" Grid.Column="1" Rows="3">
             <Button Content="Button" Command="{Binding command}" Margin="5"/>
-            <Button  Content="Button" Command="{Binding command}" Margin="5"/>
+            <Button  Content="Button" Command="{Binding DelClient}" Margin="5"/>
         </UniformGrid>
         <StatusBar Grid.Row="2" Grid.ColumnSpan="3">
             <TextBlock Text="{Binding StatusString}"> </TextBlock>
@@ -40,9 +40,7 @@
              Grid.Column="0" 
              Margin="5" 
              ItemsSource="{Binding DataTable}" 
-             CellEditEnding="{Binding AddClient}"
-             
-             ></DataGrid>
+           ></DataGrid>
         <DataGrid               
              
              AutoGenerateColumns="True"
@@ -53,9 +51,8 @@
              Grid.Row="1" 
              Grid.Column="0" 
              Margin="5" 
-             ItemsSource="{Binding Products}" 
-             
-             ></DataGrid>
+             ItemsSource="{Binding DataTable}" 
+                         ></DataGrid>
 
     </Grid>
 </Window>
