@@ -28,8 +28,8 @@ namespace ShopManager.ViewModel
         public ObservableCollection<Client> Clients
         {
             get => _clients;
-            set=>Set(ref _clients, value);
-        
+            set => Set(ref _clients, value);
+
         }
         public DataRowView SelectedClient
         {
@@ -37,7 +37,7 @@ namespace ShopManager.ViewModel
             set
             {
                 Set(ref _selectedClient, value);
-                
+
             }
         }
         public ObservableCollection<Product> Products
@@ -54,7 +54,7 @@ namespace ShopManager.ViewModel
         {
             get => _dataSet;
             set => Set(ref _dataSet, value);
-        
+
         }
         public ICommand command { get; }
         private bool CanClose(object p) => true;
@@ -89,30 +89,13 @@ namespace ShopManager.ViewModel
         private bool CanDelCLient(object p) => true;
         private void OnDelClient(object p)
         {
-            
-            SelectedClient.Row.Delete();            
+
+            SelectedClient.Row.Delete();
             clientsBase.Save();
 
         }
 
-        private void DataTable_RowChanged(object sender, DataRowChangeEventArgs e)
-        {
-            MessageBox.Show("fsd");
-            clientsBase.Save();
-        }
 
-        public void AddClient()
-        {
-        
-        
-        }
-
-
-        private void Message(string a)
-        {
-            StatusString = a;
-        
-        }
 
         public MainWindowViewModel()
         {
@@ -120,13 +103,8 @@ namespace ShopManager.ViewModel
             DataTableClient = clientsBase.PrepeareBaseForUi();
             command = new RelayCommand(OnClose, CanClose);
             DelClient = new RelayCommand(OnDelClient, CanDelCLient);
-            //DataTable.RowChanged += DataTable_RowChanged;
-            DataTableClient.RowDeleted += DataTable_RowDeleted;
+
         }
 
-        private void DataTable_RowDeleted(object sender, DataRowChangeEventArgs e)
-        {
-            MessageBox.Show("dfs");
-        }
     }
 }
