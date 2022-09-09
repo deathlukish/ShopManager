@@ -1,9 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.ObjectModel;
+﻿using System;
 using System.Data;
-using System.Data.Common;
 using System.Data.OleDb;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -13,12 +11,12 @@ namespace ShopManager
     internal class ClientsBase
     {
         private readonly string database = @".\AccessBase.accdb";
-        //private readonly string dbLangGeneral = ";LANGID=0x0409;CP=1252;COUNTRY=0";
         private OleDbConnectionStringBuilder connectionString;
         private DataTable dt;
         private OleDbDataAdapter da;
         private DataSet ds;
         private OleDbCommandBuilder commandBuilder;
+        OleDbConnection con;
         public ClientsBase()
         {
             ds = new DataSet();
@@ -30,10 +28,11 @@ namespace ShopManager
                 DataSource = database,
                 Provider = "Microsoft.ACE.OLEDB.12.0",
                 PersistSecurityInfo = true
-
             };
-
-
+            con = new OleDbConnection(connectionString.ConnectionString);
+            con.StateChange += Con_StateChange;
+            con.Open();
+            
         }
         public void Save()
         {
@@ -42,18 +41,39 @@ namespace ShopManager
 
         }
 
-        public DataTable PrepeareBaseForUi()
+        public async Task<DataTable> PrepeareBaseClients()
         {
-            OleDbConnection con = new OleDbConnection(connectionString.ConnectionString);            
-            string commandGet = $"SELECT * FROM Clients";
-            da.SelectCommand = new OleDbCommand(commandGet, con);
-            da.Fill(ds);
-            dt = ds.Tables[0];
-            return dt;
+            try
+            {
+                
+                
+                string commandGet = $"SELECT * FROM Clients";
+                da.SelectCommand = new OleDbCommand(commandGet, con);
+                da.Fill(ds);
+                dt = ds.Tables[0];
+                //con.Close();
+                return dt;
 
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            return new DataTable();
+            
         }
 
+        private void Con_StateChange(object sender, StateChangeEventArgs e)
+        {
+            MessageBox.Show(e.CurrentState.ToString());
+        }
 
+        private void Con_InfoMessage(object sender, OleDbInfoMessageEventArgs e)
+        {
+            
+        }
     }
 
 

@@ -56,9 +56,9 @@ namespace ShopManager.ViewModel
             set => Set(ref _dataSet, value);
 
         }
-        public ICommand command { get; }
-        private bool CanClose(object p) => true;
-        private async void OnClose(object p)
+        public ICommand CommandSave { get; }
+        private bool CanSave(object p) => true;
+        private async void OnSave(object p)
         {
 
             //ClientsBase clientsBase = new();
@@ -86,7 +86,11 @@ namespace ShopManager.ViewModel
             clientsBase.Save();
         }
         public ICommand DelClient { get; }
+        public ICommand LoadBase { get; }
+        private bool CanLoadBase(object p) => true;
+        private void OnLoadBase(object p) => GetBase();
         private bool CanDelCLient(object p) => true;
+              
         private void OnDelClient(object p)
         {
 
@@ -94,16 +98,21 @@ namespace ShopManager.ViewModel
             clientsBase.Save();
 
         }
+        private async void GetBase()
+        {
 
+            DataTableClient = await clientsBase.PrepeareBaseClients();
+
+        }
 
 
         public MainWindowViewModel()
         {
             clientsBase = new();
-            DataTableClient = clientsBase.PrepeareBaseForUi();
-            command = new RelayCommand(OnClose, CanClose);
+            //GetBase();
+            CommandSave = new RelayCommand(OnSave, CanSave);
             DelClient = new RelayCommand(OnDelClient, CanDelCLient);
-
+            LoadBase = new RelayCommand(OnLoadBase, CanLoadBase);
         }
 
     }

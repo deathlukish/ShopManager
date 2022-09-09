@@ -22,8 +22,9 @@
             <RowDefinition Height="5*"></RowDefinition>
         </Grid.RowDefinitions>
         <UniformGrid Grid.Row="0" Grid.Column="1" Rows="3">
-            <Button Content="Button" Command="{Binding command}" Margin="5"/>
-            <Button  Content="Button" Command="{Binding DelClient}" Margin="5"/>
+            <Button Content="Сохранить" Command="{Binding CommandSave}" Margin="5"/>
+            <Button  Content="Удалить" Command="{Binding DelClient}" Margin="5"/>
+            <Button  Content="Загрузить" Command="{Binding LoadBase}" Margin="5"/>
         </UniformGrid>
         <StatusBar Grid.Row="2" Grid.ColumnSpan="3">
             <TextBlock Text="{Binding StatusString}"> </TextBlock>
