@@ -108,7 +108,7 @@ namespace ShopManager.ViewModel
 
         public MainWindowViewModel()
         {
-            clientsBase = new();
+            clientsBase = new("1");
             //GetBase();
             CommandSave = new RelayCommand(OnSave, CanSave);
             DelClient = new RelayCommand(OnDelClient, CanDelCLient);

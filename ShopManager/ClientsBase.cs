@@ -19,7 +19,7 @@ namespace ShopManager
         private DataSet ds;
         private OleDbCommandBuilder commandBuilder;
         OleDbConnection con;
-        public ClientsBase()
+        public ClientsBase(string s)
         {
             ds = new DataSet();
             da = new OleDbDataAdapter();
