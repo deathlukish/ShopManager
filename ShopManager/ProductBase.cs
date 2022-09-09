@@ -22,7 +22,8 @@ namespace ShopManager
                 DataSource =  @"(localdb)\MSSQLLocalDB",
                 InitialCatalog = "ProductBase",
                 IntegratedSecurity = true,
-                Pooling = true
+                Pooling = true,
+                
                
             };
 

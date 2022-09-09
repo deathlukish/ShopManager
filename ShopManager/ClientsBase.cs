@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Access.Dao;
+using System;
 using System.Data;
 using System.Data.OleDb;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace ShopManager
 {
@@ -27,11 +29,11 @@ namespace ShopManager
             {
                 DataSource = database,
                 Provider = "Microsoft.ACE.OLEDB.12.0",
-                PersistSecurityInfo = true
-            };
+                PersistSecurityInfo = true,
+                ["Jet OLEDB:Database Password"] = "1"
+
+        };
             con = new OleDbConnection(connectionString.ConnectionString);
-            con.StateChange += Con_StateChange;
-            con.Open();
             
         }
         public void Save()
@@ -51,7 +53,6 @@ namespace ShopManager
                 da.SelectCommand = new OleDbCommand(commandGet, con);
                 da.Fill(ds);
                 dt = ds.Tables[0];
-                //con.Close();
                 return dt;
 
 
@@ -65,15 +66,7 @@ namespace ShopManager
             
         }
 
-        private void Con_StateChange(object sender, StateChangeEventArgs e)
-        {
-            MessageBox.Show(e.CurrentState.ToString());
-        }
 
-        private void Con_InfoMessage(object sender, OleDbInfoMessageEventArgs e)
-        {
-            
-        }
     }
 
 
