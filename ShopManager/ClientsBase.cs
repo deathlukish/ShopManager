@@ -1,6 +1,7 @@
 ﻿using Microsoft.Office.Interop.Access.Dao;
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Data.OleDb;
 using System.Drawing;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace ShopManager
 
     internal class ClientsBase
     {
-        private readonly string database = @".\AccessBase.accdb";
+       // private readonly string database = @".\AccessBase.accdb";
         private OleDbConnectionStringBuilder connectionString;
         private DataTable dt;
         private OleDbDataAdapter da;
@@ -25,16 +26,18 @@ namespace ShopManager
             da = new OleDbDataAdapter();
             dt = new DataTable();
             commandBuilder = new OleDbCommandBuilder(da);
-            connectionString = new()
-            {
-                DataSource = database,
-                Provider = "Microsoft.ACE.OLEDB.12.0",
-                PersistSecurityInfo = true,
-                ["Jet OLEDB:Database Password"] = "1"
+            //connectionString = new()
+            //{
+            //    DataSource = database,
+            //    Provider = "Microsoft.ACE.OLEDB.12.0",
+            //    PersistSecurityInfo = true,
+            //    ["Jet OLEDB:Database Password"] = "1"
 
-        };
-            con = new OleDbConnection(connectionString.ConnectionString);
-            
+            //};
+            // con = new OleDbConnection(connectionString.ConnectionString);
+            con = new OleDbConnection(System.Configuration.ConfigurationManager.
+                      ConnectionStrings["ConnectProduct"].ConnectionString);
+
         }
         public void Save()
         {
@@ -45,31 +48,32 @@ namespace ShopManager
 
         public async Task<DataTable> PrepeareBaseClients()
         {
-            try
+
+            await Task.Run(GetClients);
+            void GetClients()
             {
-                
-                
-                string commandGet = $"SELECT * FROM Clients";
-                da.SelectCommand = new OleDbCommand(commandGet, con);
-                da.Fill(ds);
-                dt = ds.Tables[0];
-                return dt;
+                try
+                {
+
+                    string commandGet = $"SELECT * FROM Clients";
+                    da.SelectCommand = new OleDbCommand(commandGet, con);
+                    da.Fill(ds);
+                    dt = ds.Tables[0];
 
 
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-            return new DataTable();
-            
+            return dt;
         }
-
-
     }
-
-
-
-
 }
+
+
+
+
+
+

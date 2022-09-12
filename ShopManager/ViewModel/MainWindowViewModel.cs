@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Configuration;
 
 namespace ShopManager.ViewModel
 {
@@ -101,7 +102,7 @@ namespace ShopManager.ViewModel
         private async void GetBase()
         {
 
-            DataTableClient = await clientsBase.PrepeareBaseClients();
+            DataTableClient =  await clientsBase.PrepeareBaseClients();
 
         }
 
@@ -113,6 +114,7 @@ namespace ShopManager.ViewModel
             CommandSave = new RelayCommand(OnSave, CanSave);
             DelClient = new RelayCommand(OnDelClient, CanDelCLient);
             LoadBase = new RelayCommand(OnLoadBase, CanLoadBase);
+            //string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
         }
 
     }
