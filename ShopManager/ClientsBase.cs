@@ -1,5 +1,6 @@
 ﻿using Microsoft.Office.Interop.Access.Dao;
 using System;
+using System.Configuration;
 using System.Data;
 using System.Data.Common;
 using System.Data.OleDb;
@@ -13,8 +14,6 @@ namespace ShopManager
 
     internal class ClientsBase
     {
-       // private readonly string database = @".\AccessBase.accdb";
-        private OleDbConnectionStringBuilder connectionString;
         private DataTable dt;
         private OleDbDataAdapter da;
         private DataSet ds;
@@ -26,17 +25,7 @@ namespace ShopManager
             da = new OleDbDataAdapter();
             dt = new DataTable();
             commandBuilder = new OleDbCommandBuilder(da);
-            //connectionString = new()
-            //{
-            //    DataSource = database,
-            //    Provider = "Microsoft.ACE.OLEDB.12.0",
-            //    PersistSecurityInfo = true,
-            //    ["Jet OLEDB:Database Password"] = "1"
-
-            //};
-            // con = new OleDbConnection(connectionString.ConnectionString);
-            con = new OleDbConnection(System.Configuration.ConfigurationManager.
-                      ConnectionStrings["ConnectProduct"].ConnectionString);
+            con = new OleDbConnection(ConfigurationManager.ConnectionStrings["ConnectProduct"].ConnectionString);
 
         }
         public void Save()

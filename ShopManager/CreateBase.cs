@@ -16,10 +16,9 @@ namespace ShopManager
         
         public void CreateAccessBase(Action<string> action)
         {
-            
-            
-            string database = @".\AccessBase.accdb";
-            const string dbLangGeneral = ";LANGID=0x0409;CP=1252;COUNTRY=0";
+                        
+            string database = @".\AccessBaseNew.accdb";
+            const string dbLangGeneral = ";LANGID=0x0409;CP=1252;COUNTRY=0;PWD=1";
             var engine = new DBEngine();
             try
             {
@@ -34,7 +33,7 @@ namespace ShopManager
                 return;
             }
  
-            string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={database};Persist Security Info=True";
+            string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={database};Jet OLEDB:Database Password=2";
             OleDbConnection connection = null;
             OleDbCommand command1 = null;
             OleDbCommand command2 = null;

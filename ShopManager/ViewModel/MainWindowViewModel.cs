@@ -88,10 +88,18 @@ namespace ShopManager.ViewModel
         }
         public ICommand DelClient { get; }
         public ICommand LoadBase { get; }
+        public ICommand AddBase { get; }
         private bool CanLoadBase(object p) => true;
         private void OnLoadBase(object p) => GetBase();
         private bool CanDelCLient(object p) => true;
-              
+        private bool CanAddBase(object p) => true;
+        private void OnAddBase(object p)
+        {
+            CreateBase createBase = new();
+            createBase.CreateAccessBase((w)=>MessageBox.Show(w));
+        
+        
+        }
         private void OnDelClient(object p)
         {
 
@@ -114,6 +122,7 @@ namespace ShopManager.ViewModel
             CommandSave = new RelayCommand(OnSave, CanSave);
             DelClient = new RelayCommand(OnDelClient, CanDelCLient);
             LoadBase = new RelayCommand(OnLoadBase, CanLoadBase);
+            AddBase = new RelayCommand(OnAddBase, CanAddBase);
             //string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
         }
 
