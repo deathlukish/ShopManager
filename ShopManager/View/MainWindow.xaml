@@ -44,7 +44,7 @@
              ItemsSource="{Binding DataTableClient}" 
            ></DataGrid>
         <DataGrid               
-             
+             ItemsSource="{Binding DataProd}"
              AutoGenerateColumns="True"
              IsReadOnly="False"
              CanUserAddRows="True"

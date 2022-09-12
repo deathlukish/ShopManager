@@ -1,11 +1,9 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
+using System.Data;
 using System.Data.OleDb;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -13,84 +11,53 @@ namespace ShopManager
 {
     internal class ProductBase
     {
+        private DataTable dt;
+        private SqlDataAdapter da;
+        private DataSet ds;
+        private SqlCommandBuilder commandBuilder;
+        private SqlConnection con;
         private readonly string database = @"(localdb)MSSQLLocalDB";
         private SqlConnectionStringBuilder connectionString;
         public ProductBase()
         {
-            connectionString = new()
-            {
-                DataSource =  @"(localdb)\MSSQLLocalDB",
-                InitialCatalog = "ProductBase",
-                IntegratedSecurity = true,
-                Pooling = true,
-                
-               
-            };
-
-
-        }
-        /// <summary>
-        /// Добавить клиента в базу
-        /// </summary>
-        /// <param name="client"></param>
-        public void AddProduct(Product product)
-        {
-            string commandAdd = $"INSERT INTO Products(Email, IdProd, NameProd) VALUES ('{product.Email}'," +
-                $"'{product.IdProd}','{product.NameProd}')";
-            try
-            {
-                using (SqlConnection con = new SqlConnection(connectionString.ConnectionString))
-                {
-                    con.Open();
-                    SqlCommand command = new(commandAdd, con);
-                    command.ExecuteNonQuery();
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-
-            }
+            ds = new DataSet();
+            da = new SqlDataAdapter();
+            dt = new DataTable();
+            commandBuilder = new SqlCommandBuilder(da);
+            con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString);
+            
 
         }
         /// <summary>
         /// Получить все продукты клиента из базы
         /// </summary>
         /// <returns></returns>
-        public ObservableCollection<Product> GetProducts(Client client)
+        public async Task<DataTable> GetProducts()
         {
-            var products = new ObservableCollection<Product>();
-            string commandGet = $"SELECT * FROM Products WHERE Email = '{client.Email}'";
-            try
+            string SelectCommand = $"SELECT * FROM Products";
+            da.SelectCommand = new SqlCommand();
+            await Task.Run(GetProd);
+            void GetProd()
             {
-                using (SqlConnection con = new SqlConnection(connectionString.ConnectionString))
-                {
-                    con.Open();
-                    SqlCommand command = new(commandGet, con);
-                    var a = command.ExecuteReader();
-                    while (a.Read())
-                    {
-                        products.Add(new Product
-                        {
-                            IdProd = (int)a["IdProd"],
-                            NameProd = a["NameProd"].ToString(),
-                            
-                        });
 
-                    }
+                
+                try
+                {
+                    
+                    da.SelectCommand = new SqlCommand(SelectCommand, con);
+                    da.Fill(ds);
+                    dt = ds.Tables[0];
 
                 }
 
-            }
-            catch (Exception e)
-            {
+                catch (Exception e)
+                {
 
-                MessageBox.Show(e.Message);
+                    MessageBox.Show(e.Message);
 
+                }
             }
-            return products;
+            return dt;
         }
         /// <summary>
         /// Удалить продукт

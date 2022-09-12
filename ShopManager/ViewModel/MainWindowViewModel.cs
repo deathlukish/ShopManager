@@ -15,16 +15,24 @@ namespace ShopManager.ViewModel
 
         private DataTable _dataTable;
         private string _statusString;
+        private DataTable _dataProd;
         private ObservableCollection<Client> _clients;
         private DataRowView _selectedClient;
         private ObservableCollection<Product> _products;
         private DataSet _dataSet;
         private ClientsBase clientsBase;
+        private ProductBase ProductBase;
         public string StatusString
         {
 
             get => _statusString;
             set => Set(ref _statusString, value);
+        }
+        public DataTable DataProd
+        {
+            get => _dataProd;
+            set => Set(ref _dataProd, value);
+        
         }
         public ObservableCollection<Client> Clients
         {
@@ -61,30 +69,10 @@ namespace ShopManager.ViewModel
         private bool CanSave(object p) => true;
         private async void OnSave(object p)
         {
+            
+            
 
-            //ClientsBase clientsBase = new();
-            //Clients = await clientsBase.GetClients();
-            //CreateBase createBase = new();
-            //createBase.CreateAccessBase(Message);
-            //Client client = new Client()
-            //{
-            //    FirstName = "fds",
-            //    MiddleName = "sfsa",
-            //    LastName = "sadsdas",
-            //    NumPhone = "+3432423",
-            //    Email = "sdaa@ccc.ru"
-            //};
-            //clientsBase.AddClient(client);
-            ////clientsBase.DelClient(client);
-            //ProductBase product = new();
-            //product.AddProduct(new Product
-            //{
-            //    Email = "sdaa@ccc.ru",
-            //    IdProd = 24,
-            //    NameProd = "dfsdfsdfs"
-            //});
-            //DataTable =  clientsBase.TestSet();
-            clientsBase.Save();
+           // clientsBase.Save();
         }
         public ICommand DelClient { get; }
         public ICommand LoadBase { get; }
@@ -111,19 +99,19 @@ namespace ShopManager.ViewModel
         {
 
             DataTableClient =  await clientsBase.PrepeareBaseClients();
-
+            DataProd = await ProductBase.GetProducts();
         }
 
 
         public MainWindowViewModel()
         {
-            clientsBase = new("1");
-            //GetBase();
+            ProductBase = new();
+            clientsBase = new();
             CommandSave = new RelayCommand(OnSave, CanSave);
             DelClient = new RelayCommand(OnDelClient, CanDelCLient);
             LoadBase = new RelayCommand(OnLoadBase, CanLoadBase);
             AddBase = new RelayCommand(OnAddBase, CanAddBase);
-            //string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
         }
 
     }

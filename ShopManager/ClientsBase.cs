@@ -18,14 +18,14 @@ namespace ShopManager
         private OleDbDataAdapter da;
         private DataSet ds;
         private OleDbCommandBuilder commandBuilder;
-        OleDbConnection con;
-        public ClientsBase(string s)
+        private OleDbConnection con;
+        public ClientsBase()
         {
             ds = new DataSet();
             da = new OleDbDataAdapter();
             dt = new DataTable();
             commandBuilder = new OleDbCommandBuilder(da);
-            con = new OleDbConnection(ConfigurationManager.ConnectionStrings["ConnectProduct"].ConnectionString);
+            con = new OleDbConnection(ConfigurationManager.ConnectionStrings["ConnectClients"].ConnectionString);
 
         }
         public void Save()
@@ -48,7 +48,7 @@ namespace ShopManager
                     da.SelectCommand = new OleDbCommand(commandGet, con);
                     da.Fill(ds);
                     dt = ds.Tables[0];
-
+                   
 
                 }
                 catch (Exception ex)
