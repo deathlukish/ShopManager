@@ -67,13 +67,7 @@ namespace ShopManager.ViewModel
         }
         public ICommand CommandSave { get; }
         private bool CanSave(object p) => true;
-        private async void OnSave(object p)
-        {
-            
-            
-
-           // clientsBase.Save();
-        }
+        private async void OnSave(object p) => clientsBase.Save();       
         public ICommand DelClient { get; }
         public ICommand LoadBase { get; }
         public ICommand AddBase { get; }
@@ -85,7 +79,7 @@ namespace ShopManager.ViewModel
         {
             CreateBase createBase = new();
             createBase.CreateAccessBase((w)=>MessageBox.Show(w));
-        
+            createBase.CreateSqlBase();
         
         }
         private void OnDelClient(object p)
