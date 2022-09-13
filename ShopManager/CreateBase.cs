@@ -69,16 +69,22 @@ namespace ShopManager
             Creaate();
             using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString))
             {
-                string Command = "CREATE TABLE[dbo].[Products]" +
-                    "([Id] INT NOT NULL PRIMARY KEY, " +
-                    "[email] NCHAR(30) NOT NULL," +
-                    "[IdProd] INT NOT NULL UNIQUE," +
-                    "[nameProd] NCHAR(30) NULL)";
-                sqlConnection.Open();
-                SqlCommand cmd = new SqlCommand(Command);
-                cmd.Connection = sqlConnection;
-                cmd.ExecuteNonQuery();
-               
+                try
+                {
+                    string Command = "CREATE TABLE[dbo].[Products]" +
+                        "([Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), " +
+                        "[email] NCHAR(30) NOT NULL," +
+                        "[IdProd] INT NOT NULL UNIQUE," +
+                        "[nameProd] NCHAR(30) NULL)";
+                    sqlConnection.Open();
+                    SqlCommand cmd = new SqlCommand(Command);
+                    cmd.Connection = sqlConnection;
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
         public void Creaate()
@@ -86,16 +92,18 @@ namespace ShopManager
             string connectionString = "Server=(localdb)\\mssqllocaldb;Database=master;Trusted_Connection=True;";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                 connection.Open();   // открываем подключение
-
-                SqlCommand command = new SqlCommand();
-                // определяем выполняемую команду
-                command.CommandText = "CREATE DATABASE Products";
-                // определяем используемое подключение
-                command.Connection = connection;
-                // выполняем команду
-                command.ExecuteNonQuery();
-                
+                try
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand();
+                    command.CommandText = "CREATE DATABASE ProductBase";
+                    command.Connection = connection;
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
 
 

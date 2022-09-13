@@ -9,6 +9,7 @@ namespace ShopManager
     internal class Client
     {
  
+   
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
