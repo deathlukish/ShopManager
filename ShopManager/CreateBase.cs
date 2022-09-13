@@ -64,17 +64,17 @@ namespace ShopManager
             }
             
         }
-        public void CreateSqlBase()
+        public void AddSqlBase()
         {
-            Creaate();
+            AddBase();
             using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString))
             {
                 try
                 {
                     string Command = "CREATE TABLE[dbo].[Products]" +
                         "([Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), " +
-                        "[email] NCHAR(30) NOT NULL," +
-                        "[IdProd] INT NOT NULL UNIQUE," +
+                        "[eMail] NCHAR(30) NOT NULL," +
+                        "[idProd] INT NOT NULL UNIQUE," +
                         "[nameProd] NCHAR(30) NULL)";
                     sqlConnection.Open();
                     SqlCommand cmd = new SqlCommand(Command);
@@ -87,7 +87,7 @@ namespace ShopManager
                 }
             }
         }
-        public void Creaate()
+        public void AddBase()
         {
             string connectionString = "Server=(localdb)\\mssqllocaldb;Database=master;Trusted_Connection=True;";
             using (SqlConnection connection = new SqlConnection(connectionString))

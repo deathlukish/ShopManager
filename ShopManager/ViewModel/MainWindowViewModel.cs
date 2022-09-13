@@ -7,11 +7,15 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Configuration;
+using System.Xml.Serialization;
+using System;
+using System.Diagnostics;
 
 namespace ShopManager.ViewModel
 {
     internal class MainWindowViewModel : ViewModel
     {
+       
 
         private DataTable _dataTable;
         private string _statusString;
@@ -79,7 +83,7 @@ namespace ShopManager.ViewModel
         {
             CreateBase createBase = new();
             createBase.CreateAccessBase((w)=>MessageBox.Show(w));
-            createBase.CreateSqlBase();
+            createBase.AddSqlBase();
         
         }
         private void OnDelClient(object p)
