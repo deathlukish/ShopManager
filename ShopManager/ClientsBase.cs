@@ -37,7 +37,7 @@ namespace ShopManager
 
         public async Task<DataTable> PrepeareBaseClients()
         {
-
+            dt.Clear();
             await Task.Run(GetClients);
             void GetClients()
             {

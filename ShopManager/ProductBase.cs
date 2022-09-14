@@ -28,11 +28,12 @@ namespace ShopManager
         /// Получить все продукты клиента из базы
         /// </summary>
         /// <returns></returns>
-        public async Task<DataTable> GetProducts(string eMail)
+        public  DataTable GetProducts(string eMail)
         {
+            dt.Clear();
             string SelectCommand = $"SELECT * FROM Products WHERE eMail = '{eMail}'";
             da.SelectCommand = new SqlCommand();
-            await Task.Run(GetProd);
+            GetProd();
             void GetProd()
             {                
                 try
@@ -53,9 +54,20 @@ namespace ShopManager
             }
             return dt;
         }
-      
 
-        
+        public void Save()
+        {
+            try
+            {
+
+                da.Update(dt);
+            }
+            catch (Exception ex)
+            { 
+            MessageBox.Show(ex.Message);
+            }
+        }
+
 
     }
 }

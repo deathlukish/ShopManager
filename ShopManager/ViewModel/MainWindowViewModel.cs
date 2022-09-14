@@ -46,14 +46,26 @@ namespace ShopManager.ViewModel
         }
         public DataRowView SelectedClient
         {
-            get => _selectedClient;
-            set
+            get
             {
-                Set(ref _selectedClient, value);
-                LoadProd(_selectedClient?.Row?.Field<string>("eMail"));
+                Temp();
+                return _selectedClient;
+            }
+            set => Set(ref _selectedClient, value);
+               
 
+            
+        }
+        private  void Temp()
+        {
+
+            if (_selectedClient != null)
+            {
+                DataProd = ProductBase.GetProducts(_selectedClient?.Row?.Field<string>("eMail"));
+                //LoadProd(_selectedClient?.Row?.Field<string>("eMail"));
             }
         }
+        
         public ObservableCollection<Product> Products
         {
             get => _products;
@@ -72,7 +84,11 @@ namespace ShopManager.ViewModel
         }
         public ICommand CommandSave { get; }
         private bool CanSave(object p) => true;
-        private async void OnSave(object p) => clientsBase.Save();       
+        private async void OnSave(object p)
+        {
+            clientsBase.Save();
+            ProductBase.Save();
+        }
         public ICommand DelClient { get; }
         public ICommand LoadBase { get; }
         public ICommand AddBase { get; }
@@ -100,10 +116,10 @@ namespace ShopManager.ViewModel
             DataTableClient =  await clientsBase.PrepeareBaseClients();
             
         }
-        private async void LoadProd(string eMail)
-        {
-            DataProd = await ProductBase.GetProducts(eMail);
-        }
+        //private async void LoadProd(string eMail)
+        //{
+        //    DataProd =  await ProductBase.GetProducts(eMail);
+        //}
 
         public MainWindowViewModel()
         {
