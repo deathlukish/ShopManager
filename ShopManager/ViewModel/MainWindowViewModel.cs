@@ -50,6 +50,7 @@ namespace ShopManager.ViewModel
             set
             {
                 Set(ref _selectedClient, value);
+                LoadProd(_selectedClient?.Row?.Field<string>("eMail"));
 
             }
         }
@@ -97,9 +98,12 @@ namespace ShopManager.ViewModel
         {
 
             DataTableClient =  await clientsBase.PrepeareBaseClients();
-            DataProd = await ProductBase.GetProducts();
+            
         }
-
+        private async void LoadProd(string eMail)
+        {
+            DataProd = await ProductBase.GetProducts(eMail);
+        }
 
         public MainWindowViewModel()
         {

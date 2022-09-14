@@ -1,9 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
-using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
-using System.Data.OleDb;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -16,8 +14,6 @@ namespace ShopManager
         private DataSet ds;
         private SqlCommandBuilder commandBuilder;
         private SqlConnection con;
-        private readonly string database = @"(localdb)MSSQLLocalDB";
-        private SqlConnectionStringBuilder connectionString;
         public ProductBase()
         {
             ds = new DataSet();
@@ -32,15 +28,13 @@ namespace ShopManager
         /// Получить все продукты клиента из базы
         /// </summary>
         /// <returns></returns>
-        public async Task<DataTable> GetProducts()
+        public async Task<DataTable> GetProducts(string eMail)
         {
-            string SelectCommand = $"SELECT * FROM Products";
+            string SelectCommand = $"SELECT * FROM Products WHERE eMail = '{eMail}'";
             da.SelectCommand = new SqlCommand();
             await Task.Run(GetProd);
             void GetProd()
-            {
-
-                
+            {                
                 try
                 {
                     
@@ -59,31 +53,9 @@ namespace ShopManager
             }
             return dt;
         }
-        /// <summary>
-        /// Удалить продукт
-        /// </summary>
-        /// <param name="ClienToDel"></param>
-        public void DelProduct(Product ProdToDel)
-        {
+      
 
-            string commandDel = $"DELETE FROM Products WHERE Email = '{ProdToDel.IdProd}'";
-            try
-            {
-                using (SqlConnection con = new SqlConnection(connectionString.ConnectionString))
-                {
-                    con.Open();
-                    SqlCommand command = new(commandDel, con);
-                    command.ExecuteNonQuery();
-
-                }
-
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-            }
-
-        }
+        
 
     }
 }
