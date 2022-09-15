@@ -14,8 +14,17 @@ namespace ShopManager
 {
     internal class CreateBase
     {
-        
-        public void CreateAccessBase(Action<string> action)
+        private Action<string>? _action;
+        public void CreateBases(Action<string> action)
+        {
+            _action = action;
+            CreateSqlBase();
+            CreateAccessBase();
+
+        }
+
+
+        private void CreateAccessBase()
         {
                         
             string database = @".\AccessBase.accdb";
@@ -30,7 +39,7 @@ namespace ShopManager
             catch (Exception e)
             {
                
-                action.Invoke(e.Message);
+                _action?.Invoke(e.Message);
                 return;
             }
  
@@ -50,44 +59,50 @@ namespace ShopManager
             }
             catch (Exception e)
             {
-                action.Invoke(e.Message);
+                _action?.Invoke(e.Message);
             }
             finally
             {
-                connection.Close();
-                connection.Dispose();
+                connection?.Close();
+                connection?.Dispose();
                 if (command1 != null)
                     command1.Dispose();
                 if (command2 != null)
                     command2.Dispose();
-                action.Invoke("База успешно создана");
+                _action?.Invoke("База клиентов успешно создана");
             }
             
         }
-        public void AddSqlBase()
+        private void CreateSqlBase()
         {
-            AddBase();
-            using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString))
+            if (AddBase())
             {
-                try
+
+                using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString))
                 {
-                    string Command = "CREATE TABLE[dbo].[Products]" +
-                        "([Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), " +
-                        "[eMail] NCHAR(30) NOT NULL," +
-                        "[idProd] INT NOT NULL UNIQUE," +
-                        "[nameProd] NCHAR(30) NULL)";
-                    sqlConnection.Open();
-                    SqlCommand cmd = new SqlCommand(Command);
-                    cmd.Connection = sqlConnection;
-                    cmd.ExecuteNonQuery();
+                    try
+                    {
+                        string Command = "CREATE TABLE[dbo].[Products]" +
+                            "([Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), " +
+                            "[eMail] NCHAR(30) NOT NULL," +
+                            "[idProd] INT NOT NULL UNIQUE," +
+                            "[nameProd] NCHAR(30) NULL)";
+                        sqlConnection.Open();
+                        SqlCommand cmd = new SqlCommand(Command);
+                        cmd.Connection = sqlConnection;
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch (Exception ex)
+                    {
+                        _action?.Invoke(ex.Message);
+                        return;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                _action?.Invoke("База товаров успешно создана");
             }
+
         }
-        public void AddBase()
+        private bool AddBase()
         {
             string connectionString = "Server=(localdb)\\mssqllocaldb;Database=master;Trusted_Connection=True;";
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -102,10 +117,11 @@ namespace ShopManager
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    _action?.Invoke(ex.Message);
+                    return false;
                 }
             }
-
+            return true;
 
         }
 

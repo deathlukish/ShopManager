@@ -20,9 +20,7 @@ namespace ShopManager.ViewModel
         private DataTable _dataTable;
         private string _statusString;
         private DataTable _dataProd;
-        private ObservableCollection<Client> _clients;
         private DataRowView _selectedClient;
-        private ObservableCollection<Product> _products;
         private DataSet _dataSet;
         private ClientsBase clientsBase;
         private ProductBase ProductBase;
@@ -38,12 +36,7 @@ namespace ShopManager.ViewModel
             set => Set(ref _dataProd, value);
         
         }
-        public ObservableCollection<Client> Clients
-        {
-            get => _clients;
-            set => Set(ref _clients, value);
-
-        }
+       
         public DataRowView SelectedClient
         {
             get
@@ -66,11 +59,6 @@ namespace ShopManager.ViewModel
             }
         }
         
-        public ObservableCollection<Product> Products
-        {
-            get => _products;
-            set => Set(ref _products, value);
-        }
         public DataTable DataTableClient
         {
             get => _dataTable;
@@ -99,8 +87,8 @@ namespace ShopManager.ViewModel
         private void OnAddBase(object p)
         {
             CreateBase createBase = new();
-            createBase.CreateAccessBase((w)=>MessageBox.Show(w));
-            createBase.AddSqlBase();
+            createBase.CreateBases((w)=>MessageBox.Show(w));
+            
         
         }
         private void OnDelClient(object p)
