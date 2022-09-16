@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Data.OleDb;
 using System.Drawing;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,11 +23,12 @@ namespace ShopManager
             _action = action;
             CreateSqlBase();
             CreateAccessBase();
-            FillBase();
 
         }
 
-
+        /// <summary>
+        /// Создать базу Access
+        /// </summary>
         private void CreateAccessBase()
         {
                         
@@ -76,10 +78,11 @@ namespace ShopManager
             }
             
         }
-        private void CreateSqlBase()
+        /// <summary>
+        /// Создать таблицу SQL
+        /// </summary>
+        private void AddTableToSQL()
         {
-            if (AddBase())
-            {
 
                 using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString))
                 {
@@ -101,11 +104,16 @@ namespace ShopManager
                         return;
                     }
                 }
-                _action?.Invoke("База товаров успешно создана");
-            }
+                FillBaseProd();
+                
+            
 
         }
-        private bool AddBase()
+        /// <summary>
+        /// Добавить базу SQL
+        /// </summary>
+        /// <returns></returns>
+        private void CreateSqlBase()
         {
             string connectionString = "Server=(localdb)\\mssqllocaldb;Database=master;Trusted_Connection=True;";
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -122,33 +130,43 @@ namespace ShopManager
                 catch (Exception ex)
                 {
                     _action?.Invoke(ex.Message);
-                    return false;
+                    return;
                 }
             }
-            return true;
+            AddTableToSQL();
 
         }
-        private void FillBase()
+        /// <summary>
+        /// Заполнить базу SQL
+        /// </summary>
+        private void FillBaseProd()
         {
-            
-            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString))
+            try
             {
-                SqlCommand command2 = new SqlCommand();
-                con.Open();
-                command2.CommandText = "SET IDENTITY_INSERT [dbo].[Products] ON INSERT INTO [dbo].[Products] " +
-                        "([Id], [eMail], [idProd], [nameProd]) VALUES (1, N'', 34, " +
-                        "N'Комп')" +
-                        "INSERT INTO [dbo].[Products] ([Id], [eMail], [idProd], [nameProd]) " +
-                        "VALUES (3, N'', 25, N'Телефон')" +
-                        "INSERT INTO [dbo].[Products] ([Id], [eMail], [idProd], [nameProd]) " +
-                        "VALUES (6, N'', 89, N'Телек')" +
-                        "SET IDENTITY_INSERT [dbo].[Products] OFF";
-                command2.Connection = con;
-                command2.ExecuteNonQuery();
-                con.Close();
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString))
+                {
+                    SqlCommand command = new SqlCommand();
+                    con.Open();
+                    command.CommandText = "SET IDENTITY_INSERT [dbo].[Products] ON INSERT INTO [dbo].[Products] " +
+                            "([Id], [eMail], [idProd], [nameProd]) VALUES (1, N'', 34, " +
+                            "N'Комп')" +
+                            "INSERT INTO [dbo].[Products] ([Id], [eMail], [idProd], [nameProd]) " +
+                            "VALUES (3, N'', 25, N'Телефон')" +
+                            "INSERT INTO [dbo].[Products] ([Id], [eMail], [idProd], [nameProd]) " +
+                            "VALUES (6, N'', 89, N'Телек')" +
+                            "SET IDENTITY_INSERT [dbo].[Products] OFF";
+                    command.Connection = con;
+                    command.ExecuteNonQuery();
+                    con.Close();
+                }
 
             }
+            catch (Exception ex)
+            {
+                _action?.Invoke(ex.Message);
 
+            }
+            _action?.Invoke("База товаров успешно создана");
         }
 
     }
