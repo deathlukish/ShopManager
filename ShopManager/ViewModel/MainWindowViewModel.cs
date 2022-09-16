@@ -55,7 +55,7 @@ namespace ShopManager.ViewModel
             if (_selectedClient != null)
             {
                 DataProd = ProductBase.GetProducts(_selectedClient?.Row?.Field<string>("eMail"));
-                //LoadProd(_selectedClient?.Row?.Field<string>("eMail"));
+                
             }
         }
         
@@ -104,10 +104,7 @@ namespace ShopManager.ViewModel
             DataTableClient =  await clientsBase.PrepeareBaseClients();
             
         }
-        //private async void LoadProd(string eMail)
-        //{
-        //    DataProd =  await ProductBase.GetProducts(eMail);
-        //}
+
 
         public MainWindowViewModel()
         {

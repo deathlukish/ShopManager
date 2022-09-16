@@ -31,7 +31,8 @@ namespace ShopManager
         public  DataTable GetProducts(string eMail)
         {
             dt.Clear();
-            string SelectCommand = $"SELECT * FROM Products WHERE eMail = '{eMail}'";
+            // string SelectCommand = $"SELECT * FROM Products WHERE eMail = '{eMail}'";
+            string SelectCommand = $"SELECT * FROM Products";
             da.SelectCommand = new SqlCommand();
             GetProd();
             void GetProd()

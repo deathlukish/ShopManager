@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.OleDb;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ShopManager
 {
@@ -20,6 +22,7 @@ namespace ShopManager
             _action = action;
             CreateSqlBase();
             CreateAccessBase();
+            FillBase();
 
         }
 
@@ -44,9 +47,9 @@ namespace ShopManager
             }
  
             string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={database};Jet OLEDB:Database Password=1";
-            OleDbConnection connection = null;
-            OleDbCommand command1 = null;
-            OleDbCommand command2 = null;
+            OleDbConnection? connection = null;
+            OleDbCommand? command1 = null;
+            OleDbCommand? command2 = null;
             try
             {
                 connection = new OleDbConnection(connectionString);
@@ -110,10 +113,11 @@ namespace ShopManager
                 try
                 {
                     connection.Open();
-                    SqlCommand command = new SqlCommand();
+                    SqlCommand command = new SqlCommand();                    
                     command.CommandText = "CREATE DATABASE ProductBase";
-                    command.Connection = connection;
+                    command.Connection = connection;                    
                     command.ExecuteNonQuery();
+                    connection.Close();
                 }
                 catch (Exception ex)
                 {
@@ -124,7 +128,28 @@ namespace ShopManager
             return true;
 
         }
+        private void FillBase()
+        {
+            
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString))
+            {
+                SqlCommand command2 = new SqlCommand();
+                con.Open();
+                command2.CommandText = "SET IDENTITY_INSERT [dbo].[Products] ON INSERT INTO [dbo].[Products] " +
+                        "([Id], [eMail], [idProd], [nameProd]) VALUES (1, N'', 34, " +
+                        "N'Комп')" +
+                        "INSERT INTO [dbo].[Products] ([Id], [eMail], [idProd], [nameProd]) " +
+                        "VALUES (3, N'', 25, N'Телефон')" +
+                        "INSERT INTO [dbo].[Products] ([Id], [eMail], [idProd], [nameProd]) " +
+                        "VALUES (6, N'', 89, N'Телек')" +
+                        "SET IDENTITY_INSERT [dbo].[Products] OFF";
+                command2.Connection = con;
+                command2.ExecuteNonQuery();
+                con.Close();
 
+            }
+
+        }
 
     }
 }
