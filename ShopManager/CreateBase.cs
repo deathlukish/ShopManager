@@ -47,44 +47,43 @@ namespace ShopManager
                 _action?.Invoke(e.Message);
                 return;
             }
- 
-            string connectionString = $"Provider=Microsoft.ACE.OLEDB.12.0;Data Source={database};Jet OLEDB:Database Password=1";
-            OleDbConnection? connection = null;
-            OleDbCommand? command1 = null;
-            OleDbCommand? command2 = null;
-            try
-            {
-                connection = new OleDbConnection(connectionString);
-                connection.Open();
-                command1 = new OleDbCommand("CREATE TABLE Clients(Id AUTOINCREMENT, FirstName CHAR(20) NOT NULL, MidleName CHAR(20) NOT NULL," +
-                    "LastName CHAR(20) NOT NULL, NumPhone CHAR(20), Email CHAR(20) NOT NULL UNIQUE)", connection);
-                command2 = new OleDbCommand("CREATE INDEX PrimaryKey ON Clients(Id) WITH PRIMARY", connection);
-                command1.ExecuteNonQuery();
-                command2.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                _action?.Invoke(e.Message);
-            }
-            finally
-            {
-                connection?.Close();
-                connection?.Dispose();
-                if (command1 != null)
-                    command1.Dispose();
-                if (command2 != null)
-                    command2.Dispose();
-                _action?.Invoke("База клиентов успешно создана");
-            }
+            AddTableToAccess();
             
         }
+        /// <summary>
+        /// Добавить таблицу в Access
+        /// </summary>
+        private void AddTableToAccess()
+        {
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(ConfigurationManager.ConnectionStrings["ConnectClients"].ConnectionString))
+                {
+                    con.Open();
+                    OleDbCommand com = new OleDbCommand("CREATE TABLE Clients(Id AUTOINCREMENT, FirstName CHAR(20) NOT NULL, MidleName CHAR(20) NOT NULL," +
+                        "LastName CHAR(20) NOT NULL, NumPhone CHAR(20), Email CHAR(20) NOT NULL UNIQUE)", con);
+                    com.ExecuteNonQuery();
+                    con.Close();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                _action?.Invoke(ex.Message);
+                return;
+            }
+            FillBaseClient();
+        
+        }
+
+
         /// <summary>
         /// Создать таблицу SQL
         /// </summary>
         private void AddTableToSQL()
         {
 
-                using (SqlConnection sqlConnection = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString))
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString))
                 {
                     try
                     {
@@ -93,9 +92,8 @@ namespace ShopManager
                             "[eMail] NCHAR(30) NOT NULL," +
                             "[idProd] INT NOT NULL UNIQUE," +
                             "[nameProd] NCHAR(30) NULL)";
-                        sqlConnection.Open();
-                        SqlCommand cmd = new SqlCommand(Command);
-                        cmd.Connection = sqlConnection;
+                        con.Open();
+                        SqlCommand cmd = new SqlCommand(Command, con);
                         cmd.ExecuteNonQuery();
                     }
                     catch (Exception ex)
@@ -121,9 +119,7 @@ namespace ShopManager
                 try
                 {
                     connection.Open();
-                    SqlCommand command = new SqlCommand();                    
-                    command.CommandText = "CREATE DATABASE ProductBase";
-                    command.Connection = connection;                    
+                    SqlCommand command = new SqlCommand("CREATE DATABASE ProductBase", connection);                                       
                     command.ExecuteNonQuery();
                     connection.Close();
                 }
@@ -145,9 +141,8 @@ namespace ShopManager
             {
                 using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString))
                 {
-                    SqlCommand command = new SqlCommand();
                     con.Open();
-                    command.CommandText = "SET IDENTITY_INSERT [dbo].[Products] ON INSERT INTO [dbo].[Products] " +
+                    string comText = "SET IDENTITY_INSERT [dbo].[Products] ON INSERT INTO [dbo].[Products] " +
                             "([Id], [eMail], [idProd], [nameProd]) VALUES (1, N'', 34, " +
                             "N'Комп')" +
                             "INSERT INTO [dbo].[Products] ([Id], [eMail], [idProd], [nameProd]) " +
@@ -155,7 +150,7 @@ namespace ShopManager
                             "INSERT INTO [dbo].[Products] ([Id], [eMail], [idProd], [nameProd]) " +
                             "VALUES (6, N'', 89, N'Телек')" +
                             "SET IDENTITY_INSERT [dbo].[Products] OFF";
-                    command.Connection = con;
+                    SqlCommand command = new SqlCommand(comText, con);                   
                     command.ExecuteNonQuery();
                     con.Close();
                 }
@@ -168,6 +163,37 @@ namespace ShopManager
             }
             _action?.Invoke("База товаров успешно создана");
         }
+        /// <summary>
+        /// Заполнить базу Access
+        /// </summary>
+        private void FillBaseClient()
+        {
+            try
+            {
+                using (OleDbConnection con = new OleDbConnection(ConfigurationManager.ConnectionStrings["ConnectClients"].ConnectionString))
+                {
+                    string AddClient1 = "INSERT INTO Clients(FirstName,MidleName,LastName,NumPhone,Email) VALUES ('Иван','Иванович','Иванов','+79266666666','test1@ya.ru')";
+                    string AddClient2 = "INSERT INTO Clients(FirstName,MidleName,LastName,NumPhone,Email) VALUES ('Петр','Петрович','Петров','+79277777777','test2@ya.ru')";
+                    string AddClient3 = "INSERT INTO Clients(FirstName,MidleName,LastName,NumPhone,Email) VALUES ('Сидр','Сидорович','Сидоров','+7928888888','test3@ya.ru')";
+                    con.Open();
+                    OleDbCommand com1 = new OleDbCommand(AddClient1, con);
+                    OleDbCommand com2 = new OleDbCommand(AddClient2, con);
+                    OleDbCommand com3 = new OleDbCommand(AddClient3, con);
+                    com1.ExecuteNonQuery();
+                    com2.ExecuteNonQuery();
+                    com3.ExecuteNonQuery();
+                    con.Close();
 
+                }
+
+
+            }
+            catch(Exception ex)
+            {
+                _action?.Invoke(ex.Message);
+                return;
+            }
+            _action?.Invoke("База клиентов успешно создана");
+        }
     }
 }
