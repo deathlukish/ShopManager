@@ -13,6 +13,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="70*"></ColumnDefinition>
+            <ColumnDefinition Width="70*"></ColumnDefinition>
             <ColumnDefinition Width="30*"></ColumnDefinition>
             
         </Grid.ColumnDefinitions>
@@ -21,7 +22,7 @@
             <RowDefinition Height="95*"></RowDefinition>
             <RowDefinition Height="5*"></RowDefinition>
         </Grid.RowDefinitions>
-        <UniformGrid Grid.Row="0" Grid.Column="1" Rows="3">
+        <UniformGrid Grid.Row="0" Grid.Column="2" Rows="3">
             <Button Content="Сохранить" Command="{Binding CommandSave}" Margin="5"/>
             <Button  Content="Удалить" Command="{Binding DelClient}" Margin="5"/>
             <Button  Content="Загрузить" Command="{Binding LoadBase}" Margin="5"/>
@@ -39,7 +40,8 @@
              CanUserDeleteRows="True"
              IsSynchronizedWithCurrentItem="True"      
              Grid.Row="0" 
-             Grid.Column="0" 
+             Grid.Column="0"
+             Grid.ColumnSpan="2"
              Margin="5" 
              ItemsSource="{Binding DataTableClient}" 
            ></DataGrid>
@@ -52,9 +54,18 @@
              IsSynchronizedWithCurrentItem="True"      
              Grid.Row="1" 
              Grid.Column="0" 
-             Margin="5" 
-             
-                         ></DataGrid>
-
+             Margin="5">
+        </DataGrid>
+        <DataGrid 
+             ItemsSource="{Binding DataProd}"
+             AutoGenerateColumns="True"
+             IsReadOnly="False"
+             CanUserAddRows="True"
+             CanUserDeleteRows="True"
+             IsSynchronizedWithCurrentItem="True"      
+             Grid.Row="1" 
+             Grid.Column="1" 
+             Margin="5">
+        </DataGrid>
     </Grid>
 </Window>

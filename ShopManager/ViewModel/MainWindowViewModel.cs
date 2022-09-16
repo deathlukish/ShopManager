@@ -70,6 +70,12 @@ namespace ShopManager.ViewModel
             set => Set(ref _dataSet, value);
 
         }
+
+        public void ff(DragEventHandler dragEventHandler)
+        { 
+        
+        }
+
         public ICommand CommandSave { get; }
         private bool CanSave(object p) => true;
         private async void OnSave(object p)
