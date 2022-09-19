@@ -11,12 +11,11 @@ namespace ShopManager
     {
         private DataTable dt;
         private SqlDataAdapter da;
-        private DataSet ds;
         private SqlCommandBuilder commandBuilder;
         private SqlConnection con;
         public ProductBase()
         {
-            ds = new DataSet();
+           
             da = new SqlDataAdapter();
             dt = new DataTable();
             commandBuilder = new SqlCommandBuilder(da);
@@ -41,8 +40,8 @@ namespace ShopManager
                 {
                     
                     da.SelectCommand = new SqlCommand(SelectCommand, con);
-                    da.Fill(ds);
-                    dt = ds.Tables[0];
+                    da.Fill(dt);
+                  
 
                 }
 

@@ -14,14 +14,15 @@ namespace ShopManager
 
     internal class ClientsBase
     {
+
+
         private DataTable dt;
         private OleDbDataAdapter da;
-        private DataSet ds;
         private OleDbCommandBuilder commandBuilder;
         private OleDbConnection con;
         public ClientsBase()
         {
-            ds = new DataSet();
+     
             da = new OleDbDataAdapter();
             dt = new DataTable();
             commandBuilder = new OleDbCommandBuilder(da);
@@ -46,8 +47,8 @@ namespace ShopManager
 
                     string commandGet = $"SELECT * FROM Clients";
                     da.SelectCommand = new OleDbCommand(commandGet, con);
-                    da.Fill(ds);
-                    dt = ds.Tables[0];
+                    da.Fill(dt);
+                   
                    
 
                 }
