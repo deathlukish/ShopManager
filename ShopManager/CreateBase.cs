@@ -17,10 +17,11 @@ namespace ShopManager
 {
     internal class CreateBase
     {
-        private Action<string>? _action;
-        public void CreateBases(Action<string> action)
+       
+        public event Action<string>? _update;
+        public void CreateBases()
         {
-            _action = action;
+            
             CreateSqlBase();
             CreateAccessBase();
 
@@ -44,7 +45,7 @@ namespace ShopManager
             catch (Exception e)
             {
                
-                _action?.Invoke(e.Message);
+                _update?.Invoke(e.Message);
                 return;
             }
             AddTableToAccess();
@@ -69,7 +70,7 @@ namespace ShopManager
             }
             catch (Exception ex)
             {
-                _action?.Invoke(ex.Message);
+                _update?.Invoke(ex.Message);
                 return;
             }
             FillBaseClient();
@@ -98,8 +99,8 @@ namespace ShopManager
                     }
                     catch (Exception ex)
                     {
-                        _action?.Invoke(ex.Message);
-                        return;
+                    _update?.Invoke(ex.Message);
+                     return;
                     }
                 }
                 FillBaseProd();
@@ -125,7 +126,7 @@ namespace ShopManager
                 }
                 catch (Exception ex)
                 {
-                    _action?.Invoke(ex.Message);
+                    _update?.Invoke(ex.Message);
                     return;
                 }
             }
@@ -158,10 +159,10 @@ namespace ShopManager
             }
             catch (Exception ex)
             {
-                _action?.Invoke(ex.Message);
+                _update?.Invoke(ex.Message);
 
             }
-            _action?.Invoke("База товаров успешно создана");
+            _update?.Invoke("База товаров успешно создана");
         }
         /// <summary>
         /// Заполнить базу Access
@@ -190,10 +191,10 @@ namespace ShopManager
             }
             catch(Exception ex)
             {
-                _action?.Invoke(ex.Message);
+                _update?.Invoke(ex.Message);
                 return;
             }
-            _action?.Invoke("База клиентов успешно создана");
+            _update?.Invoke("База клиентов успешно создана");
         }
     }
 }

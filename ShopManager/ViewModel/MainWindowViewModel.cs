@@ -93,10 +93,17 @@ namespace ShopManager.ViewModel
         private void OnAddBase(object p)
         {
             CreateBase createBase = new();
-            createBase.CreateBases((w)=>MessageBox.Show(w));
+            createBase._update += CreateBase__update;
+            createBase.CreateBases();
             
         
         }
+
+        private void CreateBase__update(string obj)
+        {
+            MessageBox.Show(obj);
+        }
+
         private void OnDelClient(object p)
         {
 
