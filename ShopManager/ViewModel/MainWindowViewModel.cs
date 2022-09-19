@@ -93,13 +93,13 @@ namespace ShopManager.ViewModel
         private void OnAddBase(object p)
         {
             CreateBase createBase = new();
-            createBase._update += CreateBase__update;
+            createBase._update += CreateBase_update;
             createBase.CreateBases();
             
         
         }
 
-        private void CreateBase__update(string obj)
+        private void CreateBase_update(string obj)
         {
             MessageBox.Show(obj);
         }
