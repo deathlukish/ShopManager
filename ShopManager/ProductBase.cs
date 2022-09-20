@@ -9,6 +9,7 @@ namespace ShopManager
 {
     internal class ProductBase
     {
+        public event Action<string>? _update;
         private DataTable dt;
         private SqlDataAdapter da;
         private SqlCommandBuilder commandBuilder;
@@ -20,18 +21,21 @@ namespace ShopManager
             dt = new DataTable();
             commandBuilder = new SqlCommandBuilder(da);
             con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString);
-            
 
         }
+
+
+ 
+
         /// <summary>
         /// Получить все продукты клиента из базы
         /// </summary>
         /// <returns></returns>
         public  DataTable GetProducts(string eMail)
         {
+            
             dt.Clear();
             string SelectCommand = $"SELECT * FROM Products WHERE eMail = '{eMail}'";
-           // string SelectCommand = $"SELECT * FROM Products";
             da.SelectCommand = new SqlCommand();
             GetProd();
             void GetProd()
@@ -41,14 +45,14 @@ namespace ShopManager
                     
                     da.SelectCommand = new SqlCommand(SelectCommand, con);
                     da.Fill(dt);
-                  
+               
 
                 }
 
                 catch (Exception e)
                 {
 
-                    MessageBox.Show(e.Message);
+                    _update?.Invoke(e.Message);
 
                 }
             }
@@ -62,9 +66,9 @@ namespace ShopManager
 
                 da.Update(dt);
             }
-            catch (Exception ex)
-            { 
-            MessageBox.Show(ex.Message);
+            catch (Exception e)
+            {
+                _update?.Invoke(e.Message);
             }
         }
 

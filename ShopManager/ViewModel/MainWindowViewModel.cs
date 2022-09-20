@@ -1,79 +1,61 @@
-﻿using Microsoft.Data.SqlClient;
-using ShopManager.Command;
-using System.Collections.ObjectModel;
+﻿using ShopManager.Command;
 using System.Data;
-using System.Data.Common;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Configuration;
-using System.Xml.Serialization;
-using System;
-using System.Diagnostics;
 
 namespace ShopManager.ViewModel
 {
     internal class MainWindowViewModel : ViewModel
     {
-       
 
-        private DataTable _dataTable;
-        private string _statusString;
+
+        private DataTable _dataClient;
         private DataTable _dataProd;
         private DataRowView _selectedClient;
         private DataSet _dataSet;
         private ClientsBase clientsBase;
         private ProductBase ProductBase;
-        public string StatusString
-        {
-
-            get => _statusString;
-            set => Set(ref _statusString, value);
-        }
+        private string _message;
         public DataTable DataProd
         {
             get => _dataProd;
             set => Set(ref _dataProd, value);
-        
+
         }
-       
+
         public DataRowView SelectedClient
         {
             get
             {
-                Temp();
+                if (_selectedClient != null)
+                {
+                    DataProd = ProductBase.GetProducts(_selectedClient?.Row?.Field<string>("eMail"));
+
+                }
                 return _selectedClient;
             }
             set => Set(ref _selectedClient, value);
-               
 
-            
+
+
         }
-        private  void Temp()
+        public string MessageText
         {
+            get => _message;
+            set => Set(ref _message, value);
 
-            if (_selectedClient != null)
-            {
-                DataProd = ProductBase.GetProducts(_selectedClient?.Row?.Field<string>("eMail"));
-                
-            }
         }
-        
+
         public DataTable DataTableClient
         {
-            get => _dataTable;
-            set => Set(ref _dataTable, value);
+            get => _dataClient;
+            set => Set(ref _dataClient, value);
         }
         public DataSet DataSetClient
         {
             get => _dataSet;
             set => Set(ref _dataSet, value);
 
-        }
-
-        public void ff(DragEventHandler dragEventHandler)
-        { 
-        
         }
 
         public ICommand CommandSave { get; }
@@ -93,15 +75,15 @@ namespace ShopManager.ViewModel
         private void OnAddBase(object p)
         {
             CreateBase createBase = new();
-            createBase._update += CreateBase_update;
+            createBase._update += MessageOfEvent;
             createBase.CreateBases();
-            
-        
+
+
         }
 
-        private void CreateBase_update(string obj)
+        private void MessageOfEvent(string text)
         {
-            MessageBox.Show(obj);
+            MessageText = text;
         }
 
         private void OnDelClient(object p)
@@ -114,8 +96,8 @@ namespace ShopManager.ViewModel
         private void GetBase()
         {
 
-            
-            
+
+
         }
 
 
@@ -123,12 +105,15 @@ namespace ShopManager.ViewModel
         {
             ProductBase = new();
             clientsBase = new();
+            ProductBase._update += MessageOfEvent;
+            clientsBase._update += MessageOfEvent;
             CommandSave = new RelayCommand(OnSave, CanSave);
             DelClient = new RelayCommand(OnDelClient, CanDelCLient);
             LoadBase = new RelayCommand(OnLoadBase, CanLoadBase);
             AddBase = new RelayCommand(OnAddBase, CanAddBase);
             DataTableClient = clientsBase.PrepeareBaseClients();
         }
+
 
     }
 }

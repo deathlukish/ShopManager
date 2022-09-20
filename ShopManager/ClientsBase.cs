@@ -10,7 +10,7 @@ namespace ShopManager
     internal class ClientsBase
     {
 
-
+        public event Action<string>? _update;
         private DataTable dt;
         private OleDbDataAdapter da;
         private OleDbCommandBuilder commandBuilder;
@@ -44,9 +44,9 @@ namespace ShopManager
 
 
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                MessageBox.Show(ex.Message);
+                _update?.Invoke(e.Message);
             }
 
             return dt;

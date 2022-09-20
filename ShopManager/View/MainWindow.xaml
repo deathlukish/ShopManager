@@ -20,7 +20,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="95*"></RowDefinition>
             <RowDefinition Height="95*"></RowDefinition>
-            <RowDefinition Height="5*"></RowDefinition>
+            <RowDefinition Height="10*"></RowDefinition>
         </Grid.RowDefinitions>
         <UniformGrid Grid.Row="0" Grid.Column="2" Columns="1">
             <Button Content="Сохранить" Command="{Binding CommandSave}" Margin="5"/>
@@ -29,7 +29,7 @@
             <Button  Content="Добавить базу" Command="{Binding AddBase}" Margin="5"/>
         </UniformGrid>
         <StatusBar Grid.Row="2" Grid.ColumnSpan="3">
-            <TextBlock Text="{Binding StatusString}"> </TextBlock>
+            <TextBlock Text="{Binding MessageText}"> </TextBlock>
         </StatusBar>
         <!--<Button  Content="Button" Grid.Column="1" Margin="5" Command="{Binding command}"/>-->
         <DataGrid               
