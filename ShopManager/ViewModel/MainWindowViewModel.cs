@@ -111,10 +111,10 @@ namespace ShopManager.ViewModel
             clientsBase.Save();
 
         }
-        private async void GetBase()
+        private void GetBase()
         {
 
-            DataTableClient =  await clientsBase.PrepeareBaseClients();
+            
             
         }
 
@@ -127,7 +127,7 @@ namespace ShopManager.ViewModel
             DelClient = new RelayCommand(OnDelClient, CanDelCLient);
             LoadBase = new RelayCommand(OnLoadBase, CanLoadBase);
             AddBase = new RelayCommand(OnAddBase, CanAddBase);
-
+            DataTableClient = clientsBase.PrepeareBaseClients();
         }
 
     }
