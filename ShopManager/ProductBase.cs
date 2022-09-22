@@ -33,9 +33,24 @@ namespace ShopManager
         /// <returns></returns>
         public  DataTable GetProducts(string eMail)
         {
-            
+
+//            @"SELECT 
+//Workers.id as 'ID',
+//Workers.workerName as 'Имя сотрудника',
+//Bosses.workerName  as 'Имя начальника',
+//Bosses.departmentName  as 'Имя отдела',
+//[Description].[value] as 'Замечание'
+//FROM  Workers, Bosses, [Description]
+//WHERE Workers.idBoss = Bosses.id and Workers.idDescription = [Description].id
+//Order By Workers.Id";
+
+
+
             dt.Clear();
-            string SelectCommand = $"SELECT * FROM Products WHERE eMail = '{eMail}'";
+            string SelectCommand = $"SELECT " +
+                $"Products.nameProd as 'Наименование'," +
+                $"Products.Price as 'Цена'" +
+                $"FROM Cart, Products WHERE Cart.eMail = '{eMail}' and Products.idProd = Cart.idProd ";
             da.SelectCommand = new SqlCommand();
             GetProd();
             void GetProd()
