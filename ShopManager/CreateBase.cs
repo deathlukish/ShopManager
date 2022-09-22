@@ -1,30 +1,20 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.Office.Interop.Access.Dao;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.OleDb;
-using System.Drawing;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
 
 namespace ShopManager
 {
     internal class CreateBase
     {
-       
+
         public event Action<string>? _update;
         public void CreateBases()
         {
-            
             CreateSqlBase();
             CreateAccessBase();
-
         }
 
         /// <summary>
@@ -32,7 +22,7 @@ namespace ShopManager
         /// </summary>
         private void CreateAccessBase()
         {
-                        
+
             string database = @".\AccessBase.accdb";
             const string dbLangGeneral = ";LANGID=0x0409;CP=1252;COUNTRY=0;PWD=1";
             var engine = new DBEngine();
@@ -40,16 +30,14 @@ namespace ShopManager
             {
                 var dbs = engine.CreateDatabase(database, dbLangGeneral);
                 dbs.Close();
-                
             }
             catch (Exception e)
             {
-               
                 _update?.Invoke(e.Message);
                 return;
             }
             AddTableToAccess();
-            
+
         }
         /// <summary>
         /// Добавить таблицу в Access
@@ -75,7 +63,7 @@ namespace ShopManager
                 return;
             }
             FillBaseClient();
-        
+
         }
 
 
@@ -85,30 +73,27 @@ namespace ShopManager
         private void AddTableToSQL()
         {
 
-                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString))
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString))
+            {
+                try
                 {
-                    try
-                    {
-                        string CommandAddProds = "CREATE TABLE[dbo].[Products]" +
-                            "([Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), " +
-                            "[eMail] NCHAR(30) NOT NULL," +
-                            "[idProd] INT NOT NULL UNIQUE," +
-                            "[nameProd] NCHAR(30) NULL)";
-                    
-                    con.Open();
-                        SqlCommand cmd = new SqlCommand(CommandAddProds, con);
-                        cmd.ExecuteNonQuery();
-                    }
-                    catch (Exception ex)
-                    {
-                    _update?.Invoke(ex.Message);
-                     return;
-                    }
-                }
-                FillBaseProd();
-                
-            
+                    string CommandAddProds = "CREATE TABLE[dbo].[Products]" +
+                        "([Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), " +
+                        "[eMail] NCHAR(30) NOT NULL," +
+                        "[idProd] INT NOT NULL UNIQUE," +
+                        "[nameProd] NCHAR(30) NULL)";
 
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand(CommandAddProds, con);
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    _update?.Invoke(ex.Message);
+                    return;
+                }
+            }
+            FillBaseProd();
         }
         /// <summary>
         /// Добавить базу SQL
@@ -122,7 +107,7 @@ namespace ShopManager
                 try
                 {
                     connection.Open();
-                    SqlCommand command = new SqlCommand("CREATE DATABASE ProductBase", connection);                                       
+                    SqlCommand command = new SqlCommand("CREATE DATABASE ProductBase", connection);
                     command.ExecuteNonQuery();
                     connection.Close();
                 }
@@ -146,7 +131,7 @@ namespace ShopManager
                 {
                     con.Open();
                     string comText = "";
-                    SqlCommand command = new SqlCommand(comText, con);                   
+                    SqlCommand command = new SqlCommand(comText, con);
                     command.ExecuteNonQuery();
                     con.Close();
                 }
@@ -191,9 +176,8 @@ namespace ShopManager
 
                 }
 
-
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _update?.Invoke(ex.Message);
                 return;
