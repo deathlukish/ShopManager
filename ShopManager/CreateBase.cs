@@ -51,9 +51,7 @@ namespace ShopManager
                     con.Open();
                     OleDbCommand comAddClients = new OleDbCommand("CREATE TABLE Clients(Id AUTOINCREMENT, FirstName CHAR(20) NOT NULL, MidleName CHAR(20) NOT NULL," +
                         "LastName CHAR(20) NOT NULL, NumPhone CHAR(20), Email CHAR(20) NOT NULL UNIQUE)", con);
-                    //OleDbCommand comAddProds = new OleDbCommand("CREATE TABLE Prods(Id AUTOINCREMENT, Name CHAR(20) NOT NULL, Price INT)", con);
                     comAddClients.ExecuteNonQuery();
-                   // comAddProds.ExecuteNonQuery();
                     con.Close();
                 }
             }
@@ -134,20 +132,17 @@ namespace ShopManager
                 using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString))
                 {
                     con.Open();
-                    string comText = "SET IDENTITY_INSERT [dbo].[Products] ON "+
-                                     "INSERT INTO[dbo].[Products] ([idProd],[nameProd], [Price]) VALUES(1,N'Утюг',100)" +
-                                     "INSERT INTO[dbo].[Products] ([idProd],[nameProd], [Price]) VALUES(2,N'Пылесос',200)" +
-                                     "INSERT INTO[dbo].[Products] ([idProd],[nameProd], [Price]) VALUES(3,N'Телек',500)" +
-                                     //"INSERT INTO[dbo].[Cart] ([eMail], [idProd]) VALUES(test1@ya.ru,1)"+
-                                     //"INSERT INTO[dbo].[Cart] ([eMail], [idProd]) VALUES(test1@ya.ru, 2)" +
-                                     //"INSERT INTO[dbo].[Cart] ([eMail], [idProd]) VALUES(test1@ya.ru, 3)" +
-                                     "SET IDENTITY_INSERT[dbo].[Products] OFF";
+                    string comText1 = "SET IDENTITY_INSERT [dbo].[Products] ON "+
+                                      "INSERT INTO[dbo].[Products] ([idProd],[nameProd], [Price]) VALUES(1,N'Утюг',100)" +
+                                      "INSERT INTO[dbo].[Products] ([idProd],[nameProd], [Price]) VALUES(2,N'Пылесос',200)" +
+                                      "INSERT INTO[dbo].[Products] ([idProd],[nameProd], [Price]) VALUES(3,N'Телек',500)" +
+                                      "SET IDENTITY_INSERT[dbo].[Products] OFF";
                     string comText2 = "SET IDENTITY_INSERT [dbo].[Cart] ON " +
-"INSERT INTO[dbo].[Cart] ([Id], [eMail], [idProd]) VALUES(1, N'test1@ya.ru', 1)" +
-"INSERT INTO[dbo].[Cart] ([Id], [eMail], [idProd]) VALUES(2, N'test1@ya.ru', 2)" +
-"INSERT INTO[dbo].[Cart] ([Id], [eMail], [idProd]) VALUES(3, N'test1@ya.ru', 3)" +
-"SET IDENTITY_INSERT[dbo].[Cart] OFF";
-                    SqlCommand command = new SqlCommand(comText, con);
+                                      "INSERT INTO[dbo].[Cart] ([Id], [eMail], [idProd]) VALUES(1, N'test1@ya.ru', 1)" +
+                                      "INSERT INTO[dbo].[Cart] ([Id], [eMail], [idProd]) VALUES(2, N'test1@ya.ru', 2)" +
+                                      "INSERT INTO[dbo].[Cart] ([Id], [eMail], [idProd]) VALUES(3, N'test1@ya.ru', 3)" +
+                                      "SET IDENTITY_INSERT[dbo].[Cart] OFF";
+                    SqlCommand command = new SqlCommand(comText1, con);
                     SqlCommand command2 = new SqlCommand(comText2, con);
                     command.ExecuteNonQuery();
                     command2.ExecuteNonQuery();
@@ -174,22 +169,13 @@ namespace ShopManager
                     string AddClient1 = "INSERT INTO Clients(FirstName,MidleName,LastName,NumPhone,Email) VALUES ('Иван','Иванович','Иванов','+79266666666','test1@ya.ru')";
                     string AddClient2 = "INSERT INTO Clients(FirstName,MidleName,LastName,NumPhone,Email) VALUES ('Петр','Петрович','Петров','+79277777777','test2@ya.ru')";
                     string AddClient3 = "INSERT INTO Clients(FirstName,MidleName,LastName,NumPhone,Email) VALUES ('Сидр','Сидорович','Сидоров','+7928888888','test3@ya.ru')";
-                    //string comAddProd1 = "INSERT INTO Prods (Name, Price) VALUES ('Телек', 300);";
-                    //string comAddProd2 = "INSERT INTO Prods (Name, Price) VALUES ('Утюг', 20);";
-                    //string comAddProd3 = "INSERT INTO Prods (Name, Price) VALUES ('Пылесос', 80);";
                     con.Open();
                     OleDbCommand com1 = new OleDbCommand(AddClient1, con);
                     OleDbCommand com2 = new OleDbCommand(AddClient2, con);
                     OleDbCommand com3 = new OleDbCommand(AddClient3, con);
-                    //OleDbCommand com4 = new OleDbCommand(comAddProd1, con);
-                    //OleDbCommand com5 = new OleDbCommand(comAddProd2, con);
-                    //OleDbCommand com6 = new OleDbCommand(comAddProd3, con);
                     com1.ExecuteNonQuery();
                     com2.ExecuteNonQuery();
                     com3.ExecuteNonQuery();
-                    //com4.ExecuteNonQuery();
-                    //com5.ExecuteNonQuery();
-                    //com6.ExecuteNonQuery();
                     con.Close();
 
                 }

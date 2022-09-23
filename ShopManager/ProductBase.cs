@@ -15,13 +15,15 @@ namespace ShopManager
        // private SqlCommandBuilder commandBuilder;
         private SqlConnection con;
         public ProductBase()
-        {           
+        {
+            //INSERT INTO[dbo].[Products] ([idProd],[nameProd], [Price]) VALUES(1,N'Утюг',100)
             da = new SqlDataAdapter();
             dt = new DataTable();
           //  commandBuilder = new SqlCommandBuilder(da);
             con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString);
-            da.InsertCommand = new SqlCommand("SELECT * FROM Cart",con);
-            da.UpdateCommand = new SqlCommand("SELECT * FROM Cart", con);            
+            da.InsertCommand = new SqlCommand("INSERT INTO Cart(eMail,idProd) VALUES(@id, 100) ",con);
+            da.UpdateCommand = new SqlCommand("SELECT * FROM Cart", con);
+            da.InsertCommand.Parameters.Add("@id",SqlDbType.Char,20, "Наименование");
         }
         /// <summary>
         /// Получить все продукты клиента из базы
