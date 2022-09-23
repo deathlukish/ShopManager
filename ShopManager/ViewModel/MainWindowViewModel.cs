@@ -73,7 +73,6 @@ namespace ShopManager.ViewModel
         public ICommand LoadBase { get; }
         public ICommand AddBase { get; }
         private bool CanLoadBase(object p) => true;
-        private void OnLoadBase(object p) => GetBase();
         private bool CanDelCLient(object p) => true;
         private bool CanAddBase(object p) => true;
         private void OnAddBase(object p)
@@ -97,13 +96,6 @@ namespace ShopManager.ViewModel
             clientsBase.Save();
 
         }
-        private void GetBase()
-        {
-
-
-
-        }
-
 
         public MainWindowViewModel()
         {
@@ -114,7 +106,6 @@ namespace ShopManager.ViewModel
             clientsBase._update += MessageOfEvent;
             CommandSave = new RelayCommand(OnSave, CanSave);
             DelClient = new RelayCommand(OnDelClient, CanDelCLient);
-            LoadBase = new RelayCommand(OnLoadBase, CanLoadBase);
             AddBase = new RelayCommand(OnAddBase, CanAddBase);
             DataTableClient = clientsBase.PrepeareBaseClients();
             DataProd = ProductBase.GetProducts();
