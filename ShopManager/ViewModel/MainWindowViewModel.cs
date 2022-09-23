@@ -9,7 +9,7 @@ namespace ShopManager.ViewModel
     internal class MainWindowViewModel : ViewModel
     {
 
-
+        private DataRowView _selectedProd;
         private DataTable _dataClient;
         private DataTable _dataProd;
         private DataTable _dataCart;
@@ -23,6 +23,12 @@ namespace ShopManager.ViewModel
             get => _dataProd;
             set => Set(ref _dataProd, value);
 
+        }
+        public DataRowView SelectedProd
+        {
+            get => _selectedProd;
+            set => Set(ref _selectedProd, value);
+        
         }
         public DataTable DataCart
         {
@@ -72,7 +78,8 @@ namespace ShopManager.ViewModel
         public ICommand DelClient { get; }
         public ICommand LoadBase { get; }
         public ICommand AddBase { get; }
-        private bool CanLoadBase(object p) => true;
+        public ICommand AddToCart { get; }
+        private bool CanAddToCart(object p) => true;
         private bool CanDelCLient(object p) => true;
         private bool CanAddBase(object p) => true;
         private void OnAddBase(object p)
@@ -83,6 +90,13 @@ namespace ShopManager.ViewModel
 
 
         }
+        private void OnAddToCart(object p)
+        {
+            _dataCart.Rows.Add(_selectedProd.Row.ItemArray);
+         
+
+        }
+
 
         private void MessageOfEvent(string text)
         {
@@ -107,6 +121,7 @@ namespace ShopManager.ViewModel
             CommandSave = new RelayCommand(OnSave, CanSave);
             DelClient = new RelayCommand(OnDelClient, CanDelCLient);
             AddBase = new RelayCommand(OnAddBase, CanAddBase);
+            AddToCart = new RelayCommand(OnAddToCart, CanAddToCart);
             DataTableClient = clientsBase.PrepeareBaseClients();
             DataProd = ProductBase.GetProducts();
         }

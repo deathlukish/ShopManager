@@ -61,6 +61,7 @@
             
              Grid.ColumnSpan="1"
              ItemsSource="{Binding DataProd}"
+             SelectedItem="{Binding SelectedProd}"
              AutoGenerateColumns="True"
              IsReadOnly="True"
              IsSynchronizedWithCurrentItem="True"      
@@ -69,7 +70,7 @@
              Margin="5">
             <DataGrid.InputBindings>
                 <MouseBinding MouseAction="LeftDoubleClick"
-                  Command="{Binding Path=AddBase}"
+                  Command="{Binding Path=AddToCart}"
                   CommandParameter="{Binding ElementName=myGrd, Path=SelectedItem}" />
             </DataGrid.InputBindings>
         </DataGrid>

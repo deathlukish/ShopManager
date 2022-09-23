@@ -29,6 +29,7 @@ namespace ShopManager
             da.InsertCommand = new SqlCommand($"INSERT INTO Cart(eMail,idProd) VALUES('{eMail}', 2) ", con);
             dt.Clear();
             string SelectCommand = $"SELECT " +
+                $"Products.idProd as 'ID',"+
                 $"Products.nameProd as 'Наименование'," +
                 $"Products.Price as 'Цена'" +              
                 $"FROM Cart, Products WHERE Cart.eMail = '{eMail}' and Products.idProd = Cart.idProd ";
@@ -52,7 +53,11 @@ namespace ShopManager
         { 
             DataTable dt = new DataTable();
             dt.Clear();
-            string SelectCommand = $"SELECT * FROM Products";
+            string SelectCommand = $"SELECT " +
+                $"Products.idProd as 'ID'," +
+                $"Products.nameProd as 'Наименование'," +
+                $"Products.Price as 'Цена'" +
+                $"FROM Products";
             GetProd();
             void GetProd()
             {
