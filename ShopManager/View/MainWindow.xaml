@@ -46,8 +46,8 @@
              ItemsSource="{Binding DataTableClient}" 
            ></DataGrid>
         <DataGrid               
-             Grid.ColumnSpan="2"
-             ItemsSource="{Binding DataProd}"
+             Grid.ColumnSpan="1"
+             ItemsSource="{Binding DataCart}"
              AutoGenerateColumns="True"
              IsReadOnly="False"
              CanUserAddRows="True"
@@ -57,6 +57,15 @@
              Grid.Column="0" 
              Margin="5">
         </DataGrid>
-        
+        <DataGrid               
+             Grid.ColumnSpan="1"
+             ItemsSource="{Binding DataProd}"
+             AutoGenerateColumns="True"
+             IsReadOnly="True"
+             IsSynchronizedWithCurrentItem="True"      
+             Grid.Row="1" 
+             Grid.Column="1" 
+             Margin="5">
+        </DataGrid>
     </Grid>
 </Window>

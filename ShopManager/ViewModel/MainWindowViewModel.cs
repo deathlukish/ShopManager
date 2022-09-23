@@ -1,6 +1,7 @@
 ﻿using ShopManager.Command;
 using System.Data;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ShopManager.ViewModel
@@ -11,6 +12,7 @@ namespace ShopManager.ViewModel
 
         private DataTable _dataClient;
         private DataTable _dataProd;
+        private DataTable _dataCart;
         private DataRowView _selectedClient;
         private DataSet _dataSet;
         private ClientsBase clientsBase;
@@ -22,22 +24,24 @@ namespace ShopManager.ViewModel
             set => Set(ref _dataProd, value);
 
         }
+        public DataTable DataCart
+        {
+            get => _dataCart;
+            set => Set(ref _dataCart, value);
 
+        }
         public DataRowView SelectedClient
         {
             get
             {
                 if (_selectedClient != null)
                 {
-                    DataProd = ProductBase.GetProducts(_selectedClient?.Row?.Field<string>("eMail"));
+                    DataCart = ProductBase.GetCart(_selectedClient?.Row?.Field<string>("eMail"));
 
                 }
                 return _selectedClient;
             }
             set => Set(ref _selectedClient, value);
-
-
-
         }
         public string MessageText
         {
@@ -103,6 +107,7 @@ namespace ShopManager.ViewModel
 
         public MainWindowViewModel()
         {
+            
             ProductBase = new();
             clientsBase = new();
             ProductBase._update += MessageOfEvent;
@@ -112,6 +117,7 @@ namespace ShopManager.ViewModel
             LoadBase = new RelayCommand(OnLoadBase, CanLoadBase);
             AddBase = new RelayCommand(OnAddBase, CanAddBase);
             DataTableClient = clientsBase.PrepeareBaseClients();
+            DataProd = ProductBase.GetProducts();
         }
 
 
