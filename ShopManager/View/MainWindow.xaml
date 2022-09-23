@@ -57,7 +57,8 @@
              Grid.Column="0" 
              Margin="5">
         </DataGrid>
-        <DataGrid               
+        <DataGrid        
+            
              Grid.ColumnSpan="1"
              ItemsSource="{Binding DataProd}"
              AutoGenerateColumns="True"
@@ -66,6 +67,11 @@
              Grid.Row="1" 
              Grid.Column="1" 
              Margin="5">
+            <DataGrid.InputBindings>
+                <MouseBinding MouseAction="LeftDoubleClick"
+                  Command="{Binding Path=AddBase}"
+                  CommandParameter="{Binding ElementName=myGrd, Path=SelectedItem}" />
+            </DataGrid.InputBindings>
         </DataGrid>
     </Grid>
 </Window>
