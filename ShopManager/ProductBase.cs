@@ -26,16 +26,17 @@ namespace ShopManager
         /// <returns></returns>
         public  DataTable GetCart(string eMail)
         {
-            da.DeleteCommand = new SqlCommand($"DELETE FROM Cart WHERE id = @id", con);
+            dt.AcceptChanges();
+            da.DeleteCommand = new SqlCommand($"DELETE FROM Cart WHERE id = @rt", con);
             da.InsertCommand = new SqlCommand($"INSERT INTO Cart(eMail,idProd) VALUES('{eMail}', @Prod) ", con);
             da.InsertCommand.Parameters.Add("@Prod", SqlDbType.Int, 10, "ID");
-            da.DeleteCommand.Parameters.Add("@id", SqlDbType.Int, 10, "id");
+            da.DeleteCommand.Parameters.Add("@rt", SqlDbType.Int, 10, "rt");
             dt.Clear();
-            string SelectCommand = $"SELECT " +
-                $"Cart.id as 'id'," +
+            string SelectCommand = $"SELECT " +               
                 $"Products.idProd as 'ID',"+
                 $"Products.nameProd as 'Наименование'," +
-                $"Products.Price as 'Цена'" +              
+                $"Products.Price as 'Цена'," +
+                $"Cart.id as 'rt'" +
                 $"FROM Cart, Products WHERE Cart.eMail = '{eMail}' and Products.idProd = Cart.idProd ";
             GetProd();
             void GetProd()
@@ -51,6 +52,7 @@ namespace ShopManager
                     _update?.Invoke(e.Message);
                 }
             }
+            
             return dt;
         }
         public DataTable GetProducts()

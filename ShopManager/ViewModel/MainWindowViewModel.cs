@@ -98,7 +98,6 @@ namespace ShopManager.ViewModel
         private void OnAddToCart(object p)
         {
             _dataCart.Rows.Add(_selectedProd.Row.ItemArray);
-        
         }
         private bool CanDelFromCart(object p) => true;
         private void OnDelFromCart(object p)
