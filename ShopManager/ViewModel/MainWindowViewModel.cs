@@ -18,6 +18,12 @@ namespace ShopManager.ViewModel
         private ClientsBase clientsBase;
         private ProductBase ProductBase;
         private string _message;
+        private DataRowView _SelectedProdInCart;
+        public DataRowView SelectedProdInCart
+        {
+            get => _SelectedProdInCart;
+            set => Set(ref _SelectedProdInCart, value);
+        }
         public DataTable DataProd
         {
             get => _dataProd;
@@ -79,6 +85,7 @@ namespace ShopManager.ViewModel
         public ICommand LoadBase { get; }
         public ICommand AddBase { get; }
         public ICommand AddToCart { get; }
+        public ICommand DelFromCart { get; }
         private bool CanAddToCart(object p) => true;
         private bool CanDelCLient(object p) => true;
         private bool CanAddBase(object p) => true;
@@ -93,8 +100,11 @@ namespace ShopManager.ViewModel
             _dataCart.Rows.Add(_selectedProd.Row.ItemArray);
         
         }
-
-
+        private bool CanDelFromCart(object p) => true;
+        private void OnDelFromCart(object p)
+        {
+            SelectedProdInCart.Row.Delete();
+        }
         private void MessageOfEvent(string text)
         {
             MessageText = text;
@@ -119,6 +129,7 @@ namespace ShopManager.ViewModel
             DelClient = new RelayCommand(OnDelClient, CanDelCLient);
             AddBase = new RelayCommand(OnAddBase, CanAddBase);
             AddToCart = new RelayCommand(OnAddToCart, CanAddToCart);
+            DelFromCart = new RelayCommand(OnDelFromCart, CanDelFromCart);
             DataTableClient = clientsBase.PrepeareBaseClients();
             DataProd = ProductBase.GetProducts();
         }

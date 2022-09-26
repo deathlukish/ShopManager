@@ -47,18 +47,21 @@
            ></DataGrid>
         <DataGrid               
              Grid.ColumnSpan="1"
+             SelectedItem="{Binding SelectedProdInCart}"
              ItemsSource="{Binding DataCart}"
              AutoGenerateColumns="True"
-             IsReadOnly="False"
-             CanUserAddRows="True"
-             CanUserDeleteRows="True"
              IsSynchronizedWithCurrentItem="True"      
              Grid.Row="1" 
              Grid.Column="0" 
+             IsReadOnly="True"
              Margin="5">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Удалить" Command="{Binding DelFromCart}"></MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
         </DataGrid>
-        <DataGrid        
-            
+        <DataGrid                    
              Grid.ColumnSpan="1"
              ItemsSource="{Binding DataProd}"
              SelectedItem="{Binding SelectedProd}"
@@ -70,8 +73,7 @@
              Margin="5">
             <DataGrid.InputBindings>
                 <MouseBinding MouseAction="LeftDoubleClick"
-                  Command="{Binding Path=AddToCart}"
-                  CommandParameter="{Binding ElementName=myGrd, Path=SelectedItem}" />
+                  Command="{Binding Path=AddToCart}" />
             </DataGrid.InputBindings>
         </DataGrid>
     </Grid>
