@@ -26,7 +26,8 @@ namespace ShopManager
         /// <returns></returns>
         public  DataTable GetCart(string eMail)
         {
-            da.InsertCommand = new SqlCommand($"INSERT INTO Cart(eMail,idProd) VALUES('{eMail}', 2) ", con);
+            da.InsertCommand = new SqlCommand($"INSERT INTO Cart(eMail,idProd) VALUES('{eMail}', @Prod) ", con);
+            da.InsertCommand.Parameters.Add("@Prod", SqlDbType.Int, 10, "ID");
             dt.Clear();
             string SelectCommand = $"SELECT " +
                 $"Products.idProd as 'ID',"+
@@ -73,10 +74,7 @@ namespace ShopManager
                 }
             }
             return dt;
-
-
         }
-
         public void Save()
         {
             try
@@ -88,8 +86,6 @@ namespace ShopManager
                 _update?.Invoke(e.Message);
             }
         }
-
-
     }
 }
 

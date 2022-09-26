@@ -87,14 +87,11 @@ namespace ShopManager.ViewModel
             CreateBase createBase = new();
             createBase._update += MessageOfEvent;
             createBase.CreateBases();
-
-
         }
         private void OnAddToCart(object p)
         {
             _dataCart.Rows.Add(_selectedProd.Row.ItemArray);
-         
-
+        
         }
 
 
