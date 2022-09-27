@@ -34,7 +34,7 @@ namespace ShopManager.ViewModel
         {
             get => _selectedProd;
             set => Set(ref _selectedProd, value);
-        
+
         }
         public DataTable DataCart
         {
@@ -49,7 +49,6 @@ namespace ShopManager.ViewModel
                 if (_selectedClient != null)
                 {
                     DataCart = ProductBase.GetCart(_selectedClient?.Row?.Field<string>("eMail"));
-
                 }
                 return _selectedClient;
             }
@@ -61,7 +60,6 @@ namespace ShopManager.ViewModel
             set => Set(ref _message, value);
 
         }
-
         public DataTable DataTableClient
         {
             get => _dataClient;
@@ -71,9 +69,7 @@ namespace ShopManager.ViewModel
         {
             get => _dataSet;
             set => Set(ref _dataSet, value);
-
         }
-
         public ICommand CommandSave { get; }
         private bool CanSave(object p) => true;
         private async void OnSave(object p)
@@ -108,18 +104,13 @@ namespace ShopManager.ViewModel
         {
             MessageText = text;
         }
-
         private void OnDelClient(object p)
         {
-
             SelectedClient.Row.Delete();
             clientsBase.Save();
-
         }
-
         public MainWindowViewModel()
-        {
-            
+        {            
             ProductBase = new();
             clientsBase = new();
             ProductBase._update += MessageOfEvent;
@@ -132,7 +123,5 @@ namespace ShopManager.ViewModel
             DataTableClient = clientsBase.PrepeareBaseClients();
             DataProd = ProductBase.GetProducts();
         }
-
-
     }
 }

@@ -9,20 +9,17 @@ namespace ShopManager
 {
     internal class CreateBase
     {
-
         public event Action<string>? _update;
         public void CreateBases()
         {
             CreateSqlBase();
             CreateAccessBase();
         }
-
         /// <summary>
         /// Создать базу Access
         /// </summary>
         private void CreateAccessBase()
         {
-
             string database = @".\AccessBase.accdb";
             const string dbLangGeneral = ";LANGID=0x0409;CP=1252;COUNTRY=0;PWD=1";
             var engine = new DBEngine();
@@ -37,7 +34,6 @@ namespace ShopManager
                 return;
             }
             AddTableToAccess();
-
         }
         /// <summary>
         /// Добавить таблицу в Access
@@ -61,10 +57,7 @@ namespace ShopManager
                 return;
             }
             FillBaseClient();
-
         }
-
-
         /// <summary>
         /// Создать таблицу SQL
         /// </summary>
@@ -120,7 +113,6 @@ namespace ShopManager
                 }
             }
             AddTableToSQL();
-
         }
         /// <summary>
         /// Заполнить базу SQL
@@ -148,12 +140,10 @@ namespace ShopManager
                     command2.ExecuteNonQuery();
                     con.Close();
                 }
-
             }
             catch (Exception ex)
             {
                 _update?.Invoke(ex.Message);
-
             }
             _update?.Invoke("База товаров успешно создана");
         }
@@ -177,9 +167,7 @@ namespace ShopManager
                     com2.ExecuteNonQuery();
                     com3.ExecuteNonQuery();
                     con.Close();
-
                 }
-
             }
             catch (Exception ex)
             {
