@@ -93,7 +93,6 @@ namespace ShopManager.ViewModel
             createBase._update += MessageOfEvent;
             createBase.CreateBases();
             LoadBases();
-
         }
         private void OnAddToCart(object p)
         {          
