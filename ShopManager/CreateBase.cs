@@ -36,6 +36,30 @@ namespace ShopManager
             AddTableToAccess();
         }
         /// <summary>
+        /// Добавить базу SQL
+        /// </summary>
+        /// <returns></returns>
+        private void CreateSqlBase()
+        {
+            string connectionString = "Server=(localdb)\\mssqllocaldb;Database=master;Trusted_Connection=True;";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand("CREATE DATABASE ProductBase", connection);
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                }
+                catch (Exception ex)
+                {
+                    _update?.Invoke(ex.Message);
+                    return;
+                }
+            }
+            AddTableToSQL();
+        }
+        /// <summary>
         /// Добавить таблицу в Access
         /// </summary>
         private void AddTableToAccess()
@@ -75,7 +99,8 @@ namespace ShopManager
                     string CommandAddCart = "CREATE TABLE[dbo].[Cart]" +
                         "([id] INT NOT NULL PRIMARY KEY IDENTITY(1,1), " +
                         "[eMail] NCHAR(30) NOT NULL," +
-                        "[idProd] INT NOT NULL);";
+                        "[idProd] INT NOT NULL," +
+                        "[Count] INT NOT NULL);";
                     con.Open();
                     SqlCommand cmd1 = new SqlCommand(CommandAddProds, con);
                     SqlCommand cmd2 = new SqlCommand(CommandAddCart, con);
@@ -89,30 +114,6 @@ namespace ShopManager
                 }
             }
             FillBaseProd();
-        }
-        /// <summary>
-        /// Добавить базу SQL
-        /// </summary>
-        /// <returns></returns>
-        private void CreateSqlBase()
-        {
-            string connectionString = "Server=(localdb)\\mssqllocaldb;Database=master;Trusted_Connection=True;";
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    connection.Open();
-                    SqlCommand command = new SqlCommand("CREATE DATABASE ProductBase", connection);
-                    command.ExecuteNonQuery();
-                    connection.Close();
-                }
-                catch (Exception ex)
-                {
-                    _update?.Invoke(ex.Message);
-                    return;
-                }
-            }
-            AddTableToSQL();
         }
         /// <summary>
         /// Заполнить базу SQL

@@ -6,7 +6,6 @@ using System.Windows;
 
 namespace ShopManager
 {
-
     internal class ClientsBase
     {
         public event Action<string>? _update;
@@ -30,6 +29,7 @@ namespace ShopManager
             catch (Exception e)
             {
                 _update?.Invoke(e.Message);
+                return;
             }
             _update?.Invoke("Данные успешно внесены");
         }

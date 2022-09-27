@@ -27,15 +27,20 @@ namespace ShopManager
         public  DataTable GetCart(string eMail)
         {
             da.DeleteCommand = new SqlCommand($"DELETE FROM Cart WHERE id = @rt", con);
-            da.InsertCommand = new SqlCommand($"INSERT INTO Cart(eMail,idProd) VALUES('{eMail}', @Prod) ", con);
+            da.InsertCommand = new SqlCommand($"INSERT INTO Cart(eMail,idProd,Count) VALUES('{eMail}',@Prod,1)", con);
+            da.UpdateCommand = new SqlCommand($"UPDATE Cart SET Count = @count WHERE id = @rt AND eMail = '{eMail}'", con);
             da.InsertCommand.Parameters.Add("@Prod", SqlDbType.Int, 10, "ID");
             da.DeleteCommand.Parameters.Add("@rt", SqlDbType.Int, 10, "rt");
+            da.UpdateCommand.Parameters.Add("@count", SqlDbType.Int,10,"Кол-во");
+            da.UpdateCommand.Parameters.Add("@rt", SqlDbType.Int, 10, "rt");
+           // da.UpdateCommand.Parameters.Add("@Client", SqlDbType.NChar,20, "")
             dt.Clear();
             string SelectCommand = $"SELECT " +               
                 $"Products.idProd as 'ID',"+
                 $"Products.nameProd as 'Наименование'," +
                 $"Products.Price as 'Цена'," +
-                $"Cart.id as 'rt'" +
+                $"Cart.id as 'rt'," +
+                $"Cart.Count as 'Кол-во'"+
                 $"FROM Cart, Products WHERE Cart.eMail = '{eMail}' and Products.idProd = Cart.idProd ";
             GetProd();
             void GetProd()
@@ -45,7 +50,6 @@ namespace ShopManager
                     da.SelectCommand = new SqlCommand(SelectCommand, con);
                     da.Fill(dt);
                 }
-
                 catch (Exception e)   
                 {
                     _update?.Invoke(e.Message);
@@ -70,7 +74,6 @@ namespace ShopManager
                     da.SelectCommand = new SqlCommand(SelectCommand, con);
                     da.Fill(dt);
                 }
-
                 catch (Exception e)
                 {
                     _update?.Invoke(e.Message);
@@ -87,9 +90,9 @@ namespace ShopManager
             catch (Exception e)
             {
                 _update?.Invoke(e.Message);
+                return;
             }
             _update?.Invoke("Данные успешно внесены");
         }
     }
 }
-

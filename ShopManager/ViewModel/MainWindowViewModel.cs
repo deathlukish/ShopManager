@@ -1,5 +1,7 @@
 ﻿using ShopManager.Command;
+using System;
 using System.Data;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -90,10 +92,36 @@ namespace ShopManager.ViewModel
             CreateBase createBase = new();
             createBase._update += MessageOfEvent;
             createBase.CreateBases();
+            LoadBases();
+
         }
         private void OnAddToCart(object p)
         {
-            _dataCart.Rows.Add(_selectedProd.Row.ItemArray);
+            //table.Rows[i].SetField(column, value);
+            //table.Rows[i].SetField(columnIndex, value);
+            //table.Rows[i].SetField(columnName, value);
+            //DataColumn[] keyColumns = new DataColumn[1];
+            //keyColumns[0] = _dataCart?.Columns["Наименование"];
+            //_dataCart.PrimaryKey = keyColumns;
+            //_dataCart.Rows.Find(_selectedProd.Row.ItemArray[1]).ItemArray[4] = 15;          
+            //_dataCart.Rows.Add(_selectedProd.Row.ItemArray);           
+            int index = _dataCart
+                .AsEnumerable()
+                .Select(col => col.Field<string>("Наименование"))                
+                .ToList()                
+                .FindIndex(b => b == _selectedProd.Row.Field<string>("Наименование"));
+            if (index == -1)
+            {
+                _dataCart.Rows.Add(_selectedProd.Row.ItemArray);
+            }
+            else
+            {
+                // var b = _selectedProd.Row.Field<string>("Наименование");
+                //int a = (int)_dataCart.Rows.Find(index).ItemArray[4];
+                //_dataCart.Select("Наименование like '%Утюг%'");
+                var a = _dataCart.Rows[index].Field<int>("Кол-во");
+                _dataCart.Rows[index].SetField("Кол-во", ++a);
+            }
         }
         private bool CanDelFromCart(object p) => true;
         private void OnDelFromCart(object p)
@@ -109,6 +137,11 @@ namespace ShopManager.ViewModel
             SelectedClient.Row.Delete();
             clientsBase.Save();
         }
+        private void LoadBases()
+        {
+            DataTableClient = clientsBase.PrepeareBaseClients();
+            DataProd = ProductBase.GetProducts();
+        }
         public MainWindowViewModel()
         {            
             ProductBase = new();
@@ -120,8 +153,7 @@ namespace ShopManager.ViewModel
             AddBase = new RelayCommand(OnAddBase, CanAddBase);
             AddToCart = new RelayCommand(OnAddToCart, CanAddToCart);
             DelFromCart = new RelayCommand(OnDelFromCart, CanDelFromCart);
-            DataTableClient = clientsBase.PrepeareBaseClients();
-            DataProd = ProductBase.GetProducts();
+            LoadBases();
         }
     }
 }
