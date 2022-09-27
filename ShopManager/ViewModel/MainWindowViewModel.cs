@@ -96,15 +96,7 @@ namespace ShopManager.ViewModel
 
         }
         private void OnAddToCart(object p)
-        {
-            //table.Rows[i].SetField(column, value);
-            //table.Rows[i].SetField(columnIndex, value);
-            //table.Rows[i].SetField(columnName, value);
-            //DataColumn[] keyColumns = new DataColumn[1];
-            //keyColumns[0] = _dataCart?.Columns["Наименование"];
-            //_dataCart.PrimaryKey = keyColumns;
-            //_dataCart.Rows.Find(_selectedProd.Row.ItemArray[1]).ItemArray[4] = 15;          
-            //_dataCart.Rows.Add(_selectedProd.Row.ItemArray);           
+        {          
             int index = _dataCart
                 .AsEnumerable()
                 .Select(col => col.Field<string>("Наименование"))                
@@ -112,13 +104,10 @@ namespace ShopManager.ViewModel
                 .FindIndex(b => b == _selectedProd.Row.Field<string>("Наименование"));
             if (index == -1)
             {
-                _dataCart.Rows.Add(_selectedProd.Row.ItemArray);
+                _dataCart.Rows.Add(_selectedProd.Row.ItemArray).SetField("Кол-во", 1);
             }
             else
             {
-                // var b = _selectedProd.Row.Field<string>("Наименование");
-                //int a = (int)_dataCart.Rows.Find(index).ItemArray[4];
-                //_dataCart.Select("Наименование like '%Утюг%'");
                 var a = _dataCart.Rows[index].Field<int>("Кол-во");
                 _dataCart.Rows[index].SetField("Кол-во", ++a);
             }
