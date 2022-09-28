@@ -98,17 +98,17 @@ namespace ShopManager.ViewModel
         {          
             int index = _dataCart
                 .AsEnumerable()
-                .Select(col => col.Field<string>("Наименование"))                
+                .Select(col => col.Field<string>("nameProd"))                
                 .ToList()                
-                .FindIndex(b => b == _selectedProd.Row.Field<string>("Наименование"));
+                .FindIndex(b => b == _selectedProd.Row.Field<string>("nameProd"));
             if (index == -1)
             {
-                _dataCart.Rows.Add(_selectedProd.Row.ItemArray).SetField("Кол-во", 1);
+                _dataCart.Rows.Add(_selectedProd.Row.ItemArray).SetField("Count", 1);
             }
             else
             {
-                var a = _dataCart.Rows[index].Field<int>("Кол-во");
-                _dataCart.Rows[index].SetField("Кол-во", ++a);
+                var a = _dataCart.Rows[index].Field<int>("Count");
+                _dataCart.Rows[index].SetField("Count", ++a);
             }
         }
         private bool CanDelFromCart(object p) => true;

@@ -19,8 +19,8 @@ namespace ShopManager
             dt = new DataTable();
             con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString);            
             da.UpdateCommand = new SqlCommand("SELECT * FROM Cart", con);
-            da.DeleteCommand = new SqlCommand($"DELETE FROM Cart WHERE id = @rt", con);
-            da.DeleteCommand.Parameters.Add("@rt", SqlDbType.Int, 10, "rt");
+            da.DeleteCommand = new SqlCommand($"DELETE FROM Cart WHERE id = @id", con);
+            da.DeleteCommand.Parameters.Add("@id", SqlDbType.Int, 10, "id");
         }
         /// <summary>
         /// Получить все продукты клиента из базы
@@ -30,17 +30,17 @@ namespace ShopManager
         {
             da.UpdateCommand.Parameters.Add("@count", SqlDbType.Int,10,"Кол-во");
             da.InsertCommand = new SqlCommand($"INSERT INTO Cart(eMail,idProd,Count) VALUES('{eMail}',@Prod,1)", con);
-            da.UpdateCommand = new SqlCommand($"UPDATE Cart SET Count = @count WHERE id = @rt AND eMail = '{eMail}'", con);
-            da.InsertCommand.Parameters.Add("@Prod", SqlDbType.Int, 10, "ID");
-            da.UpdateCommand.Parameters.Add("@count", SqlDbType.Int, 10, "Кол-во");
-            da.UpdateCommand.Parameters.Add("@rt", SqlDbType.Int, 10, "rt");
+            da.UpdateCommand = new SqlCommand($"UPDATE Cart SET Count = @count WHERE id = @id AND eMail = '{eMail}'", con);
+            da.InsertCommand.Parameters.Add("@Prod", SqlDbType.Int, 10, "ProdID");
+            da.UpdateCommand.Parameters.Add("@count", SqlDbType.Int, 10, "Count");
+            da.UpdateCommand.Parameters.Add("@id", SqlDbType.Int, 10, "id");
             dt.Clear();
             string SelectCommand = $"SELECT " +               
-                $"Products.idProd as 'ID',"+
-                $"Products.nameProd as 'Наименование'," +
-                $"Products.Price as 'Цена'," +
-                $"Cart.id as 'rt'," +
-                $"Cart.Count as 'Кол-во'"+
+                $"Products.idProd as 'ProdID',"+
+                $"Products.nameProd," +
+                $"Products.Price," +
+                $"Cart.id," +
+                $"Cart.Count "+
                 $"FROM Cart, Products WHERE Cart.eMail = '{eMail}' and Products.idProd = Cart.idProd ";
             GetProd();
             void GetProd()
@@ -62,9 +62,9 @@ namespace ShopManager
             DataTable dt = new DataTable();
             dt.Clear();
             string SelectCommand = $"SELECT " +
-                $"Products.idProd as 'ID'," +
-                $"Products.nameProd as 'Наименование'," +
-                $"Products.Price as 'Цена'" +
+                $"Products.idProd," +
+                $"Products.nameProd," +
+                $"Products.Price " +
                 $"FROM Products";
             GetProd();
             void GetProd()

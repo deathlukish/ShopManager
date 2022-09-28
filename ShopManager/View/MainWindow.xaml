@@ -49,12 +49,18 @@
              Grid.ColumnSpan="1"
              SelectedItem="{Binding SelectedProdInCart}"
              ItemsSource="{Binding DataCart}"
-             AutoGenerateColumns="True"
+             AutoGenerateColumns="False"
              IsSynchronizedWithCurrentItem="True"      
              Grid.Row="1" 
              Grid.Column="0" 
              IsReadOnly="True"
              Margin="5">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding nameProd}" 
+                                    Header="Наименование" Width="160*" />
+                <DataGridTextColumn Binding="{Binding Count}" 
+                                    Header="Кол-во" Width="60*"/>
+            </DataGrid.Columns>
             <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Удалить" Command="{Binding DelFromCart}"></MenuItem>
