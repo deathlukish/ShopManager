@@ -83,7 +83,7 @@
              Grid.ColumnSpan="1"
              ItemsSource="{Binding DataProd}"
              SelectedItem="{Binding SelectedProd}"
-             AutoGenerateColumns="True"
+             AutoGenerateColumns="False"
              IsReadOnly="True"
              IsSynchronizedWithCurrentItem="True"      
              Grid.Row="1" 
