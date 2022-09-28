@@ -3,6 +3,7 @@ using System;
 using System.Configuration;
 using System.Data;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace ShopManager
 {
@@ -16,21 +17,22 @@ namespace ShopManager
         {
             da = new SqlDataAdapter();
             dt = new DataTable();
-            con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString);
+            con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString);            
+            da.UpdateCommand = new SqlCommand("SELECT * FROM Cart", con);
+            da.DeleteCommand = new SqlCommand($"DELETE FROM Cart WHERE id = @id", con);
+            da.DeleteCommand.Parameters.Add("@id", SqlDbType.Int, 10, "id");
         }
         /// <summary>
         /// Получить все продукты клиента из базы
         /// </summary>
         /// <returns>
         /// </returns>
-        public async Task<DataTable> GetCartAsync(string eMail)
+        public  DataTable GetCart(string eMail)
         {
-            
-            da.DeleteCommand = new SqlCommand($"DELETE FROM Cart WHERE id = @id", con);
-            da.DeleteCommand.Parameters.Add("@id", SqlDbType.Int, 10, "id");
+            da.UpdateCommand.Parameters.Add("@count", SqlDbType.Int,10,"Кол-во");
             da.InsertCommand = new SqlCommand($"INSERT INTO Cart(eMail,idProd,Count) VALUES('{eMail}',@Prod,1)", con);
-            da.InsertCommand.Parameters.Add("@Prod", SqlDbType.Int, 10, "ProdID");
             da.UpdateCommand = new SqlCommand($"UPDATE Cart SET Count = @count WHERE id = @id AND eMail = '{eMail}'", con);
+            da.InsertCommand.Parameters.Add("@Prod", SqlDbType.Int, 10, "ProdID");
             da.UpdateCommand.Parameters.Add("@count", SqlDbType.Int, 10, "Count");
             da.UpdateCommand.Parameters.Add("@id", SqlDbType.Int, 10, "id");
             dt.Clear();
@@ -40,10 +42,10 @@ namespace ShopManager
                 $"Products.Price," +
                 $"Cart.id," +
                 $"Cart.Count "+
-                $"FROM Cart, Products WHERE Cart.eMail = '{eMail}' AND Products.idProd = Cart.idProd ";
-            await Task.Run(GetProd);
-            async void GetProd()
-            {                   
+                $"FROM Cart, Products WHERE Cart.eMail = '{eMail}' and Products.idProd = Cart.idProd ";
+            GetProd();
+            void GetProd()
+            {                
                 try
                 {                    
                     da.SelectCommand = new SqlCommand(SelectCommand, con);
@@ -53,11 +55,11 @@ namespace ShopManager
                 {
                     _update?.Invoke(e.Message);
                 }
-            }
+            }            
             return dt;
         }
-        public async Task<DataTable> GetProductsAsync()
-        {           
+        public DataTable GetProducts()
+        { 
             DataTable dt = new DataTable();
             dt.Clear();
             string SelectCommand = $"SELECT " +
@@ -65,7 +67,7 @@ namespace ShopManager
                 $"Products.nameProd," +
                 $"Products.Price " +
                 $"FROM Products";
-            await Task.Run(GetProd);
+            GetProd();
             void GetProd()
             {
                 try
