@@ -25,7 +25,8 @@ namespace ShopManager
         /// <summary>
         /// Получить все продукты клиента из базы
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// </returns>
         public  DataTable GetCart(string eMail)
         {
             da.UpdateCommand.Parameters.Add("@count", SqlDbType.Int,10,"Кол-во");

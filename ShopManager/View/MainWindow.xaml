@@ -34,7 +34,7 @@
         <!--<Button  Content="Button" Grid.Column="1" Margin="5" Command="{Binding command}"/>-->
         <DataGrid               
              SelectedItem="{Binding SelectedClient}"
-             AutoGenerateColumns="True"
+             AutoGenerateColumns="False"
              IsReadOnly="False"
              CanUserAddRows="True"
              CanUserDeleteRows="True"
@@ -43,8 +43,20 @@
              Grid.Column="0"
              Grid.ColumnSpan="2"
              Margin="5" 
-             ItemsSource="{Binding DataTableClient}" 
-           ></DataGrid>
+             ItemsSource="{Binding DataTableClient}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding FirstName}" 
+                                    Header="Имя" Width="*" />
+                <DataGridTextColumn Binding="{Binding MidleName}" 
+                                    Header="Отчество" Width="*"/>
+                <DataGridTextColumn Binding="{Binding LastName}" 
+                                    Header="Фамилия" Width="*"/>
+                <DataGridTextColumn Binding="{Binding NumPhone}" 
+                                    Header="Телефон" Width="*"/>
+                <DataGridTextColumn Binding="{Binding Email}" 
+                                    Header="Почта" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
         <DataGrid               
              Grid.ColumnSpan="1"
              SelectedItem="{Binding SelectedProdInCart}"
@@ -77,6 +89,12 @@
              Grid.Row="1" 
              Grid.Column="1" 
              Margin="5">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding nameProd}" 
+                                    Header="Наименование" Width="160*" />
+                <DataGridTextColumn Binding="{Binding Price}" 
+                                    Header="Цена" Width="60*"/>
+            </DataGrid.Columns>
             <DataGrid.InputBindings>
                 <MouseBinding MouseAction="LeftDoubleClick"
                   Command="{Binding Path=AddToCart}" />
