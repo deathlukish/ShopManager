@@ -21,7 +21,6 @@ namespace ShopManager
             da.UpdateCommand = new SqlCommand("SELECT * FROM Cart", con);
             da.DeleteCommand = new SqlCommand($"DELETE FROM Cart WHERE id = @rt", con);
             da.DeleteCommand.Parameters.Add("@rt", SqlDbType.Int, 10, "rt");
-            da.UpdateCommand.Parameters.Add("@rt", SqlDbType.Int, 10, "rt");
         }
         /// <summary>
         /// Получить все продукты клиента из базы
@@ -33,6 +32,8 @@ namespace ShopManager
             da.InsertCommand = new SqlCommand($"INSERT INTO Cart(eMail,idProd,Count) VALUES('{eMail}',@Prod,1)", con);
             da.UpdateCommand = new SqlCommand($"UPDATE Cart SET Count = @count WHERE id = @rt AND eMail = '{eMail}'", con);
             da.InsertCommand.Parameters.Add("@Prod", SqlDbType.Int, 10, "ID");
+            da.UpdateCommand.Parameters.Add("@count", SqlDbType.Int, 10, "Кол-во");
+            da.UpdateCommand.Parameters.Add("@rt", SqlDbType.Int, 10, "rt");
             dt.Clear();
             string SelectCommand = $"SELECT " +               
                 $"Products.idProd as 'ID',"+
