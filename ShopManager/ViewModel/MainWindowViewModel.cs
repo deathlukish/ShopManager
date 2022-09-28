@@ -80,7 +80,6 @@ namespace ShopManager.ViewModel
             ProductBase.Save();
         }
         public ICommand DelClient { get; }
-        public ICommand LoadBase { get; }
         public ICommand AddBase { get; }
         public ICommand AddToCart { get; }
         public ICommand DelFromCart { get; }
