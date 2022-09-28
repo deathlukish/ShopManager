@@ -50,12 +50,20 @@ namespace ShopManager.ViewModel
             {
                 if (_selectedClient != null)
                 {
-                    DataCart = ProductBase.GetCart(_selectedClient?.Row?.Field<string>("eMail"));
+                    // DataCart = ProductBase.GetCart(_selectedClient?.Row?.Field<string>("eMail"));
+                    GetCart();
                 }
                 return _selectedClient;
             }
             set => Set(ref _selectedClient, value);
         }
+        private async void GetCart()
+        { 
+        
+            DataCart = await ProductBase.GetCartAsync(_selectedClient?.Row?.Field<string>("eMail"));
+
+        }
+
         public string MessageText
         {
             get => _message;
@@ -124,10 +132,10 @@ namespace ShopManager.ViewModel
             SelectedClient.Row.Delete();
             clientsBase.Save();
         }
-        private void LoadBases()
+        private async void LoadBases()
         {
-            DataTableClient = clientsBase.PrepeareBaseClients();
-            DataProd = ProductBase.GetProducts();
+            DataTableClient = await clientsBase.PrepeareBaseClientsAsync();
+            DataProd = await ProductBase.GetProductsAsync();
         }
         public MainWindowViewModel()
         {            

@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Data;
 using System.Data.OleDb;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace ShopManager
@@ -33,18 +34,22 @@ namespace ShopManager
             }
             _update?.Invoke("Данные успешно внесены");
         }
-        public DataTable PrepeareBaseClients()
+        public async Task<DataTable> PrepeareBaseClientsAsync()
         {
-            dt.Clear();
-            try
+            await Task.Run(GetClient);
+            void GetClient()
             {
-                string commandGet = $"SELECT * FROM Clients";
-                da.SelectCommand = new OleDbCommand(commandGet, con);
-                da.Fill(dt);
-            }
-            catch (Exception e)
-            {
-                _update?.Invoke(e.Message);
+                dt.Clear();
+                try
+                {
+                    string commandGet = $"SELECT * FROM Clients";
+                    da.SelectCommand = new OleDbCommand(commandGet, con);
+                    da.Fill(dt);
+                }
+                catch (Exception e)
+                {
+                    _update?.Invoke(e.Message);
+                }
             }
             return dt;
         }
