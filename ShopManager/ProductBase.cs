@@ -18,9 +18,6 @@ namespace ShopManager
             da = new SqlDataAdapter();
             dt = new DataTable();
             con = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectProducts"].ConnectionString);            
-            da.UpdateCommand = new SqlCommand("SELECT * FROM Cart", con);
-            da.DeleteCommand = new SqlCommand($"DELETE FROM Cart WHERE id = @id", con);
-            da.DeleteCommand.Parameters.Add("@id", SqlDbType.Int, 10, "id");
         }
         /// <summary>
         /// Получить все продукты клиента из базы
@@ -35,6 +32,8 @@ namespace ShopManager
             da.InsertCommand.Parameters.Add("@Prod", SqlDbType.Int, 10, "ProdID");
             da.UpdateCommand.Parameters.Add("@count", SqlDbType.Int, 10, "Count");
             da.UpdateCommand.Parameters.Add("@id", SqlDbType.Int, 10, "id");
+            da.DeleteCommand = new SqlCommand($"DELETE FROM Cart WHERE id = @id AND eMail = '{eMail}'" , con);
+            da.DeleteCommand.Parameters.Add("@id", SqlDbType.Int, 10, "id");
             dt.Clear();
             string SelectCommand = $"SELECT " +               
                 $"Products.idProd as 'ProdID',"+
