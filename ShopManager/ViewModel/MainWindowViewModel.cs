@@ -94,7 +94,8 @@ namespace ShopManager.ViewModel
             LoadBases();
         }
         private void OnAddToCart(object p)
-        {          
+        {
+            DataCart.AcceptChanges();
             int index = _dataCart
                 .AsEnumerable()
                 .Select(col => col.Field<string>("nameProd"))                
