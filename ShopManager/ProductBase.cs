@@ -26,10 +26,9 @@ namespace ShopManager
         /// </returns>
         public  DataTable GetCart(string eMail)
         {
-            da.UpdateCommand.Parameters.Add("@count", SqlDbType.Int,10,"Кол-во");
             da.InsertCommand = new SqlCommand($"INSERT INTO Cart(eMail,idProd,Count) VALUES('{eMail}',@Prod,1)", con);
-            da.UpdateCommand = new SqlCommand($"UPDATE Cart SET Count = @count WHERE id = @id AND eMail = '{eMail}'", con);
             da.InsertCommand.Parameters.Add("@Prod", SqlDbType.Int, 10, "ProdID");
+            da.UpdateCommand = new SqlCommand($"UPDATE Cart SET Count = @count WHERE id = @id AND eMail = '{eMail}'", con);
             da.UpdateCommand.Parameters.Add("@count", SqlDbType.Int, 10, "Count");
             da.UpdateCommand.Parameters.Add("@id", SqlDbType.Int, 10, "id");
             da.DeleteCommand = new SqlCommand($"DELETE FROM Cart WHERE id = @id AND eMail = '{eMail}'" , con);

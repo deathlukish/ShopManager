@@ -103,6 +103,7 @@ namespace ShopManager.ViewModel
             if (index == -1)
             {
                 _dataCart.Rows.Add(_selectedProd.Row.ItemArray).SetField("Count", 1);
+                ProductBase.Save();
             }
             else
             {
@@ -114,6 +115,7 @@ namespace ShopManager.ViewModel
         private void OnDelFromCart(object p)
         {
             SelectedProdInCart.Row.Delete();
+            ProductBase.Save();
         }
         private void MessageOfEvent(string text)
         {
