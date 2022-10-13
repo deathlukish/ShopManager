@@ -1,4 +1,5 @@
 ﻿using ShopManager.Command;
+using ShopManager.EFClient;
 using System;
 using System.Data;
 using System.Linq;
@@ -17,8 +18,6 @@ namespace ShopManager.ViewModel
         private DataTable _dataCart;
         private DataRowView _selectedClient;
         private DataSet _dataSet;
-        private ClientsBase clientsBase;
-        private ProductBase ProductBase;
         private string _message;
         private DataRowView _SelectedProdInCart;
         public DataRowView SelectedProdInCart
@@ -50,7 +49,7 @@ namespace ShopManager.ViewModel
             {
                 if (_selectedClient != null)
                 {
-                    DataCart = ProductBase.GetCart(_selectedClient?.Row?.Field<string>("eMail"));
+                    //DataCart = ProductBase.GetCart(_selectedClient?.Row?.Field<string>("eMail"));
                 }
                 return _selectedClient;
             }
@@ -76,8 +75,8 @@ namespace ShopManager.ViewModel
         private bool CanSave(object p) => true;
         private async void OnSave(object p)
         {
-            clientsBase.Save();
-            ProductBase.Save();
+       
+         
         }
         public ICommand DelClient { get; }
         public ICommand AddBase { get; }
@@ -104,7 +103,7 @@ namespace ShopManager.ViewModel
             if (index == -1)
             {
                 _dataCart.Rows.Add(_selectedProd.Row.ItemArray).SetField("Count", 1);
-                ProductBase.Save();
+             
             }
             else
             {
@@ -116,7 +115,7 @@ namespace ShopManager.ViewModel
         private void OnDelFromCart(object p)
         {
             SelectedProdInCart.Row.Delete();
-            ProductBase.Save();
+           
         }
         private void MessageOfEvent(string text)
         {
@@ -125,25 +124,28 @@ namespace ShopManager.ViewModel
         private void OnDelClient(object p)
         {
             SelectedClient.Row.Delete();
-            clientsBase.Save();
+     
         }
         private void LoadBases()
         {
-            DataTableClient = clientsBase.PrepeareBaseClients();
-            DataProd = ProductBase.GetProducts();
+      
+           
         }
         public MainWindowViewModel()
-        {            
-            ProductBase = new();
-            clientsBase = new();
-            ProductBase._update += MessageOfEvent;
-            clientsBase._update += MessageOfEvent;
-            CommandSave = new RelayCommand(OnSave, CanSave);
-            DelClient = new RelayCommand(OnDelClient, CanDelCLient);
-            AddBase = new RelayCommand(OnAddBase, CanAddBase);
-            AddToCart = new RelayCommand(OnAddToCart, CanAddToCart);
-            DelFromCart = new RelayCommand(OnDelFromCart, CanDelFromCart);
-            LoadBases();
+        {
+            //ProductBase = new();
+            //clientsBase = new();
+            //ProductBase._update += MessageOfEvent;
+            //clientsBase._update += MessageOfEvent;
+            //CommandSave = new RelayCommand(OnSave, CanSave);
+            //DelClient = new RelayCommand(OnDelClient, CanDelCLient);
+            //AddBase = new RelayCommand(OnAddBase, CanAddBase);
+            //AddToCart = new RelayCommand(OnAddToCart, CanAddToCart);
+            //DelFromCart = new RelayCommand(OnDelFromCart, CanDelFromCart);
+            //LoadBases();
+            EFClientBase dbcontext = new();
+            var a = dbcontext.Products.ToList();
+            var b = dbcontext.Cart.ToList();
         }
     }
 }
