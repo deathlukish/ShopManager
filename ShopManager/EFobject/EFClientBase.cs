@@ -13,10 +13,12 @@ namespace ShopManager.EFClient
     {
         public DbSet<Product> Products { get; set; }
         public DbSet<Cart> Cart { get; set; }
+        public DbSet<Client> Clients {get;set;}
         
         public EFClientBase()
         {
             Database.EnsureCreated();
+           // Database.EnsureDeleted();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

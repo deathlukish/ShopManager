@@ -87,9 +87,7 @@ namespace ShopManager.ViewModel
         private bool CanAddBase(object p) => true;
         private void OnAddBase(object p)
         {
-            CreateBase createBase = new();
-            createBase._update += MessageOfEvent;
-            createBase.CreateBases();
+ 
             LoadBases();
         }
         private void OnAddToCart(object p)
@@ -133,19 +131,22 @@ namespace ShopManager.ViewModel
         }
         public MainWindowViewModel()
         {
-            //ProductBase = new();
-            //clientsBase = new();
-            //ProductBase._update += MessageOfEvent;
-            //clientsBase._update += MessageOfEvent;
-            //CommandSave = new RelayCommand(OnSave, CanSave);
-            //DelClient = new RelayCommand(OnDelClient, CanDelCLient);
-            //AddBase = new RelayCommand(OnAddBase, CanAddBase);
-            //AddToCart = new RelayCommand(OnAddToCart, CanAddToCart);
-            //DelFromCart = new RelayCommand(OnDelFromCart, CanDelFromCart);
-            //LoadBases();
             EFClientBase dbcontext = new();
             var a = dbcontext.Products.ToList();
             var b = dbcontext.Cart.ToList();
+            
+            dbcontext.Clients.Add(new Client()
+            {
+                FirstName = "sd",
+                MidleName = "sd",
+                LastName = "sd",
+                NumPhone = "2222",
+                Email = "dsdsdsds",
+              
+               
+            });
+            dbcontext.SaveChanges();
+            var c = dbcontext.Clients.ToList();
         }
     }
 }
