@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShopManager.Command;
 using ShopManager.EFClient;
-using ShopManager.EFobject;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -18,11 +17,10 @@ namespace ShopManager.ViewModel
     internal class MainWindowViewModel : ViewModel
     {
         private EFClientBase _dbcontext;
-       // private WorkBase _workBase;
         private Product _selectedProd;
         private BindingList<Client> _dataClient;
         private Client _selectedClient;
-        private List<Product> _dataProd;
+        private BindingList<Product> _dataProd;
         private List<Cart> _dataCart;
         private string _message;
         private Product _SelectedProdInCart;
@@ -31,7 +29,7 @@ namespace ShopManager.ViewModel
             get => _SelectedProdInCart;
             set => Set(ref _SelectedProdInCart, value);
         }
-        public List<Product> DataProd
+        public BindingList<Product> DataProd
         {
             get => _dataProd;
             set => Set(ref _dataProd, value);
@@ -55,8 +53,8 @@ namespace ShopManager.ViewModel
             {
                 if (_selectedClient != null)
                 {
-
-                   // DataCart = _dbcontext.Cart.Local.Where(e=>e.eMail==_selectedClient.Email).ToList();
+                    var carts = _dbcontext.Cart.Where(e => e.eMail == "12");
+                    DataCart = carts.ToList();
                     //DataCart = ProductBase.GetCart(_selectedClient?.Row?.Field<string>("eMail"));
                 }
                 return _selectedClient;
@@ -96,13 +94,13 @@ namespace ShopManager.ViewModel
         }
         private void OnAddToCart(object p)
         {
-            //_dbcontext.Cart.Local.Add(new Cart()
-            //{
-            //    Count = 0,
-            //    eMail = _selectedClient.Email,
-            //    idProd = _selectedProd.id
-            //}
-            //); 
+            _dbcontext.Cart.Local.Add(new Cart()
+            {
+                Count = 0,
+                eMail = _selectedClient.Email,
+                idProd = _selectedProd.id
+            }
+            );
             //DataCart.Add(new Cart()
             //{
             //    Count = 0,
@@ -154,8 +152,13 @@ namespace ShopManager.ViewModel
             
             _dbcontext = new();
             _dbcontext.Clients.Load();
+            _dbcontext.Products.Load();
+            //_dbcontext.Cart.Load();
             DataTableClient = _dbcontext.Clients.Local.ToBindingList();
+            DataProd = _dbcontext.Products.Local.ToBindingList();
             AddToCart = new RelayCommand(OnAddToCart,CanAddToCart);
+            
+            //_dbcontext.Cart.Load();
             CommandSave = new RelayCommand(OnSave, CanSave);
         }
     }
