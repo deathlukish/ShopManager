@@ -53,13 +53,16 @@ namespace ShopManager.ViewModel
             {
                 if (_selectedClient != null)
                 {
-                    var carts = _dbcontext.Cart.Where(e => e.eMail == "12");
-                    DataCart = carts.ToList();
                     //DataCart = ProductBase.GetCart(_selectedClient?.Row?.Field<string>("eMail"));
                 }
                 return _selectedClient;
             }
-            set => Set(ref _selectedClient, value);
+            set
+            {
+                Set(ref _selectedClient, value);
+                var carts = _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email);
+                    DataCart = carts.ToList();
+            }
         }
         public string MessageText
         {
