@@ -60,8 +60,12 @@ namespace ShopManager.ViewModel
             set
             {
                 Set(ref _selectedClient, value);
-                var carts = _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email);
-                    DataCart = carts.ToList();
+                if (SelectedClient != null)
+                {
+                    _dbcontext.Cart.Local.Where(e => e.eMail == SelectedClient.Email);
+                    DataCart = _dbcontext.Cart.ToList();
+                    _dbcontext.SaveChanges();
+                }
             }
         }
         public string MessageText
