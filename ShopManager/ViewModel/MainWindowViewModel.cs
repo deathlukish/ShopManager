@@ -92,6 +92,13 @@ namespace ShopManager.ViewModel
         }
         private void OnAddToCart(object p)
         {
+            _dbcontext.Cart.Local.Add(new Cart()
+            {
+                Count = 0,
+                eMail = _selectedClient.Email,
+                idProd = _selectedProd.id
+            }
+            ); 
             DataCart.Add(new Cart()
             {
                 Count = 0,
@@ -147,7 +154,9 @@ namespace ShopManager.ViewModel
             //var a = dbcontext.Products.ToList();
             //var b = dbcontext.Cart.ToList();
             DataTableClient = _dbcontext.Clients.Local.ToObservableCollection();
+           
             DataProd = _dbcontext.Products.ToList();
+            
             //dbcontext.Clients.Add(new Client()
             //{
             //    FirstName = "sd",
