@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShopManager.Command;
 using ShopManager.EFClient;
+using ShopManager.EFobject;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Windows;
@@ -16,8 +18,9 @@ namespace ShopManager.ViewModel
     internal class MainWindowViewModel : ViewModel
     {
         private EFClientBase _dbcontext;
+       // private WorkBase _workBase;
         private Product _selectedProd;
-        private ObservableCollection<Client> _dataClient;
+        private BindingList<Client> _dataClient;
         private Client _selectedClient;
         private List<Product> _dataProd;
         private List<Cart> _dataCart;
@@ -53,7 +56,7 @@ namespace ShopManager.ViewModel
                 if (_selectedClient != null)
                 {
 
-                    DataCart = _dbcontext.Cart.Local.Where(e=>e.eMail==_selectedClient.Email).ToList();
+                   // DataCart = _dbcontext.Cart.Local.Where(e=>e.eMail==_selectedClient.Email).ToList();
                     //DataCart = ProductBase.GetCart(_selectedClient?.Row?.Field<string>("eMail"));
                 }
                 return _selectedClient;
@@ -66,7 +69,7 @@ namespace ShopManager.ViewModel
             set => Set(ref _message, value);
 
         }
-        public ObservableCollection<Client> DataTableClient
+        public BindingList<Client> DataTableClient
         {
             get => _dataClient;
             set => Set(ref _dataClient, value);
@@ -75,8 +78,10 @@ namespace ShopManager.ViewModel
         private bool CanSave(object p) => true;
         private async void OnSave(object p)
         {
-       
-         
+            _dbcontext.SaveChanges();
+
+
+
         }
         public ICommand DelClient { get; }
         public ICommand AddBase { get; }
@@ -87,26 +92,25 @@ namespace ShopManager.ViewModel
         private bool CanAddBase(object p) => true;
         private void OnAddBase(object p)
         {
- 
             LoadBases();
         }
         private void OnAddToCart(object p)
         {
-            _dbcontext.Cart.Local.Add(new Cart()
-            {
-                Count = 0,
-                eMail = _selectedClient.Email,
-                idProd = _selectedProd.id
-            }
-            ); 
-            DataCart.Add(new Cart()
-            {
-                Count = 0,
-                eMail = _selectedClient.Email,
-                idProd = _selectedProd.id
-            }
-            ); 
-            _dbcontext.SaveChanges();
+            //_dbcontext.Cart.Local.Add(new Cart()
+            //{
+            //    Count = 0,
+            //    eMail = _selectedClient.Email,
+            //    idProd = _selectedProd.id
+            //}
+            //); 
+            //DataCart.Add(new Cart()
+            //{
+            //    Count = 0,
+            //    eMail = _selectedClient.Email,
+            //    idProd = _selectedProd.id
+            //}
+            //); 
+            //_dbcontext.SaveChanges();
             //_dbcontext.Cart.
             //DataCart.AcceptChanges();
             //int index = _dataCart
@@ -147,29 +151,12 @@ namespace ShopManager.ViewModel
         }
         public MainWindowViewModel()
         {
-            _dbcontext = new();
-            var a =_dbcontext.Cart;
-            _dbcontext.Clients.Load();
-            _dbcontext.Cart.Load();
-            //var a = dbcontext.Products.ToList();
-            //var b = dbcontext.Cart.ToList();
-            DataTableClient = _dbcontext.Clients.Local.ToObservableCollection();
-           
-            DataProd = _dbcontext.Products.ToList();
             
-            //dbcontext.Clients.Add(new Client()
-            //{
-            //    FirstName = "sd",
-            //    MidleName = "sd",
-            //    LastName = "sd",
-            //    NumPhone = "2222",
-            //    Email = "dsdsdsds",
-
-
-            //});
-            //_dbcontext.SaveChanges();
-            //var c = dbcontext.Clients.ToList();
+            _dbcontext = new();
+            _dbcontext.Clients.Load();
+            DataTableClient = _dbcontext.Clients.Local.ToBindingList();
             AddToCart = new RelayCommand(OnAddToCart,CanAddToCart);
+            CommandSave = new RelayCommand(OnSave, CanSave);
         }
     }
 }
