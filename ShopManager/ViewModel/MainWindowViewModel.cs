@@ -3,6 +3,7 @@ using ShopManager.Command;
 using ShopManager.EFClient;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
@@ -51,7 +52,8 @@ namespace ShopManager.ViewModel
             {
                 if (_selectedClient != null)
                 {
-                    DataCart = _dbcontext.Cart.Local.ToList();
+
+                    DataCart = _dbcontext.Cart.Local.Where(e=>e.eMail==_selectedClient.Email).ToList();
                     //DataCart = ProductBase.GetCart(_selectedClient?.Row?.Field<string>("eMail"));
                 }
                 return _selectedClient;
@@ -141,10 +143,11 @@ namespace ShopManager.ViewModel
             _dbcontext = new();
             var a =_dbcontext.Cart;
             _dbcontext.Clients.Load();
+            _dbcontext.Cart.Load();
             //var a = dbcontext.Products.ToList();
             //var b = dbcontext.Cart.ToList();
             DataTableClient = _dbcontext.Clients.Local.ToObservableCollection();
-            //DataProd = _dbcontext.Products.Local.ToList();
+            DataProd = _dbcontext.Products.ToList();
             //dbcontext.Clients.Add(new Client()
             //{
             //    FirstName = "sd",
