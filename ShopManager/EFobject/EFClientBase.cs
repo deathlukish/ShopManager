@@ -18,7 +18,7 @@ namespace ShopManager.EFClient
         public EFClientBase()
         {
             Database.EnsureCreated();
-           // Database.EnsureDeleted();
+         
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

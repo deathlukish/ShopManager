@@ -1,6 +1,9 @@
-﻿using ShopManager.Command;
+﻿using Microsoft.EntityFrameworkCore;
+using ShopManager.Command;
 using ShopManager.EFClient;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Windows;
@@ -11,44 +14,44 @@ namespace ShopManager.ViewModel
 {
     internal class MainWindowViewModel : ViewModel
     {
-
-        private DataRowView _selectedProd;
-        private DataTable _dataClient;
-        private DataTable _dataProd;
-        private DataTable _dataCart;
-        private DataRowView _selectedClient;
-        private DataSet _dataSet;
+        private EFClientBase _dbcontext;
+        private Product _selectedProd;
+        private ObservableCollection<Client> _dataClient;
+        private Client _selectedClient;
+        private List<Product> _dataProd;
+        private List<Cart> _dataCart;
         private string _message;
-        private DataRowView _SelectedProdInCart;
-        public DataRowView SelectedProdInCart
+        private Product _SelectedProdInCart;
+        public Product SelectedProdInCart
         {
             get => _SelectedProdInCart;
             set => Set(ref _SelectedProdInCart, value);
         }
-        public DataTable DataProd
+        public List<Product> DataProd
         {
             get => _dataProd;
             set => Set(ref _dataProd, value);
 
         }
-        public DataRowView SelectedProd
+        public Product SelectedProd
         {
             get => _selectedProd;
             set => Set(ref _selectedProd, value);
 
         }
-        public DataTable DataCart
+        public List<Cart> DataCart
         {
             get => _dataCart;
             set => Set(ref _dataCart, value);
 
         }
-        public DataRowView SelectedClient
+        public Client SelectedClient
         {
             get
             {
                 if (_selectedClient != null)
                 {
+                    DataCart = _dbcontext.Cart.Local.ToList();
                     //DataCart = ProductBase.GetCart(_selectedClient?.Row?.Field<string>("eMail"));
                 }
                 return _selectedClient;
@@ -61,15 +64,10 @@ namespace ShopManager.ViewModel
             set => Set(ref _message, value);
 
         }
-        public DataTable DataTableClient
+        public ObservableCollection<Client> DataTableClient
         {
             get => _dataClient;
             set => Set(ref _dataClient, value);
-        }
-        public DataSet DataSetClient
-        {
-            get => _dataSet;
-            set => Set(ref _dataSet, value);
         }
         public ICommand CommandSave { get; }
         private bool CanSave(object p) => true;
@@ -92,27 +90,36 @@ namespace ShopManager.ViewModel
         }
         private void OnAddToCart(object p)
         {
-            DataCart.AcceptChanges();
-            int index = _dataCart
-                .AsEnumerable()
-                .Select(col => col.Field<string>("nameProd"))                
-                .ToList()                
-                .FindIndex(b => b == _selectedProd.Row.Field<string>("nameProd"));
-            if (index == -1)
+            DataCart.Add(new Cart()
             {
-                _dataCart.Rows.Add(_selectedProd.Row.ItemArray).SetField("Count", 1);
-             
+                Count = 0,
+                eMail = _selectedClient.Email,
+                idProd = _selectedProd.id
             }
-            else
-            {
-                var a = _dataCart.Rows[index].Field<int>("Count");
-                _dataCart.Rows[index].SetField("Count", ++a);
-            }
+            ); 
+            _dbcontext.SaveChanges();
+            //_dbcontext.Cart.
+            //DataCart.AcceptChanges();
+            //int index = _dataCart
+            //    .AsEnumerable()
+            //    .Select(col => col.Field<string>("nameProd"))
+            //    .ToList()
+            //    .FindIndex(b => b == _selectedProd.Row.Field<string>("nameProd"));
+            //if (index == -1)
+            //
+            //    _dataCart.Rows.Add(_selectedProd.Row.ItemArray).SetField("Count", 1);
+
+            //}
+            //else
+            //{
+            //    var a = _dataCart.Rows[index].Field<int>("Count");
+            //    _dataCart.Rows[index].SetField("Count", ++a);
+            //}
         }
         private bool CanDelFromCart(object p) => true;
         private void OnDelFromCart(object p)
         {
-            SelectedProdInCart.Row.Delete();
+           // SelectedProdInCart.Row.Delete();
            
         }
         private void MessageOfEvent(string text)
@@ -121,7 +128,7 @@ namespace ShopManager.ViewModel
         }
         private void OnDelClient(object p)
         {
-            SelectedClient.Row.Delete();
+           // SelectedClient.Row.Delete();
      
         }
         private void LoadBases()
@@ -131,22 +138,26 @@ namespace ShopManager.ViewModel
         }
         public MainWindowViewModel()
         {
-            EFClientBase dbcontext = new();
-            var a = dbcontext.Products.ToList();
-            var b = dbcontext.Cart.ToList();
-            
-            dbcontext.Clients.Add(new Client()
-            {
-                FirstName = "sd",
-                MidleName = "sd",
-                LastName = "sd",
-                NumPhone = "2222",
-                Email = "dsdsdsds",
-              
-               
-            });
-            dbcontext.SaveChanges();
-            var c = dbcontext.Clients.ToList();
+            _dbcontext = new();
+            var a =_dbcontext.Cart;
+            _dbcontext.Clients.Load();
+            //var a = dbcontext.Products.ToList();
+            //var b = dbcontext.Cart.ToList();
+            DataTableClient = _dbcontext.Clients.Local.ToObservableCollection();
+            //DataProd = _dbcontext.Products.Local.ToList();
+            //dbcontext.Clients.Add(new Client()
+            //{
+            //    FirstName = "sd",
+            //    MidleName = "sd",
+            //    LastName = "sd",
+            //    NumPhone = "2222",
+            //    Email = "dsdsdsds",
+
+
+            //});
+            //_dbcontext.SaveChanges();
+            //var c = dbcontext.Clients.ToList();
+            AddToCart = new RelayCommand(OnAddToCart,CanAddToCart);
         }
     }
 }
