@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShopManager.EFClient;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ShopManager.EFobject
 {
@@ -22,6 +23,10 @@ namespace ShopManager.EFobject
         public void SaveBase()
         {
             _dbContext.SaveChanges();
+        }
+        public IEnumerable<Cart> GetGart(string email)
+        {         
+          return _dbContext.Cart.Where(e=>e.eMail==email);
         }
     }
 }

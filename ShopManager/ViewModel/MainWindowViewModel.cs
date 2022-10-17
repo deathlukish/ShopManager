@@ -18,7 +18,7 @@ namespace ShopManager.ViewModel
         private ObservableCollection<Client> _dataClient;
         private Client _selectedClient;
         private BindingList<Product> _dataProd;
-        private BindingList<Cart> _dataCart;
+        private ObservableCollection<Cart> _dataCart;
         private string _message;
         private Product _SelectedProdInCart;
         public Product SelectedProdInCart
@@ -38,7 +38,7 @@ namespace ShopManager.ViewModel
             set => Set(ref _selectedProd, value);
 
         }
-        public BindingList<Cart> DataCart
+        public ObservableCollection<Cart> DataCart
         {
             get => _dataCart;
             set => Set(ref _dataCart, value);
@@ -50,18 +50,19 @@ namespace ShopManager.ViewModel
             set
             {
                 Set(ref _selectedClient, value);
-                //if (SelectedClient != null)
-                //{
-                //    DataCart = new BindingList<Cart>();
-                //    // _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email);
-                //    foreach (var item in _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email))
-                //    {
-                //        DataCart.Add(item);
 
-                //    }
+                if (SelectedClient != null)
+                {
+                    DataCart = new ObservableCollection<Cart>();
                     // _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email);
-                    // _dbcontext.SaveChanges();
-                //}
+                    foreach (var item in _dataProvader.GetGart(SelectedClient.Email))
+                    {
+                        DataCart.Add(item);
+
+                    }
+                   // _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email);
+                   // _dbcontext.SaveChanges();
+                }
             }
         }
         public string MessageText
