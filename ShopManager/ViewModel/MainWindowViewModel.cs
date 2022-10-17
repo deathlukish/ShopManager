@@ -1,11 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ShopManager.Command;
+﻿using ShopManager.Command;
 using ShopManager.EFClient;
 using ShopManager.EFobject;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Data;
-using System.Linq;
 using System.Windows.Input;
 
 namespace ShopManager.ViewModel
@@ -13,11 +10,10 @@ namespace ShopManager.ViewModel
     internal class MainWindowViewModel : ViewModel
     {
         private DataProvader _dataProvader;
-        private EFClientBase _dbcontext;
         private Product _selectedProd;
         private ObservableCollection<Client> _dataClient;
         private Client _selectedClient;
-        private BindingList<Product> _dataProd;
+        private List<Product> _dataProd;
         private ObservableCollection<Cart> _dataCart;
         private string _message;
         private Product _SelectedProdInCart;
@@ -26,7 +22,7 @@ namespace ShopManager.ViewModel
             get => _SelectedProdInCart;
             set => Set(ref _SelectedProdInCart, value);
         }
-        public BindingList<Product> DataProd
+        public List<Product> DataProd
         {
             get => _dataProd;
             set => Set(ref _dataProd, value);
@@ -54,14 +50,10 @@ namespace ShopManager.ViewModel
                 if (SelectedClient != null)
                 {
                     DataCart = new ObservableCollection<Cart>();
-                    // _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email);
                     foreach (var item in _dataProvader.GetGart(SelectedClient.Email))
                     {
                         DataCart.Add(item);
-
                     }
-                   // _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email);
-                   // _dbcontext.SaveChanges();
                 }
             }
         }
@@ -80,6 +72,7 @@ namespace ShopManager.ViewModel
         private bool CanSave(object p) => true;
         private async void OnSave(object p)
         {
+            //_dataProvader.SaveOBS(DataClient);
             _dataProvader.SaveBase();
         }
         public ICommand DelClient { get; }
@@ -102,7 +95,8 @@ namespace ShopManager.ViewModel
                 idProd = _selectedProd.id
             }
             );
-            _dbcontext.SaveChanges();
+            _dataProvader.SaveOBS(DataCart);
+            _dataProvader.SaveBase();
             //DataCart.Add(new Cart()
             //{
             //    Count = 0,
@@ -158,6 +152,12 @@ namespace ShopManager.ViewModel
                 DataClient.Add(item);
             }
             CommandSave = new RelayCommand(OnSave, CanSave);
+            AddToCart = new RelayCommand(OnAddToCart, CanAddToCart);
+            DataProd = new();
+            foreach (var item in _dataProvader.GetProdt())
+            {
+                DataProd.Add(item);
+            }
         }
     }
 }

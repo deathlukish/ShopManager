@@ -20,13 +20,22 @@ namespace ShopManager.EFobject
         {
             return _dbContext.Clients;
         }
+        public IEnumerable<Product> GetProdt()
+        {
+            return _dbContext.Products;
+        }
         public void SaveBase()
         {
             _dbContext.SaveChanges();
+            
         }
         public IEnumerable<Cart> GetGart(string email)
         {         
           return _dbContext.Cart.Where(e=>e.eMail==email);
+        }
+        public void SaveOBS (IEnumerable<Cart> values)
+        {
+            _dbContext.UpdateRange(values);
         }
     }
 }
