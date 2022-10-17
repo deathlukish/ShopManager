@@ -42,7 +42,7 @@
              Grid.Column="0"
              Grid.ColumnSpan="2"
              Margin="5" 
-             ItemsSource="{Binding DataTableClient}">
+             ItemsSource="{Binding DataClient}">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding FirstName}" 
                                     Header="Имя" Width="*" />

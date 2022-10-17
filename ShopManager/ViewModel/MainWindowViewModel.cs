@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShopManager.Command;
 using ShopManager.EFClient;
+using ShopManager.EFobject;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
@@ -10,9 +12,10 @@ namespace ShopManager.ViewModel
 {
     internal class MainWindowViewModel : ViewModel
     {
+        private DataProvader _dataProvader;
         private EFClientBase _dbcontext;
         private Product _selectedProd;
-        private BindingList<Client> _dataClient;
+        private ObservableCollection<Client> _dataClient;
         private Client _selectedClient;
         private BindingList<Product> _dataProd;
         private BindingList<Cart> _dataCart;
@@ -47,18 +50,18 @@ namespace ShopManager.ViewModel
             set
             {
                 Set(ref _selectedClient, value);
-                if (SelectedClient != null)
-                {
-                    DataCart = new BindingList<Cart>();
-                    // _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email);
-                    foreach (var item in _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email))
-                    {
-                        DataCart.Add(item);
+                //if (SelectedClient != null)
+                //{
+                //    DataCart = new BindingList<Cart>();
+                //    // _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email);
+                //    foreach (var item in _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email))
+                //    {
+                //        DataCart.Add(item);
 
-                    }
+                //    }
                     // _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email);
                     // _dbcontext.SaveChanges();
-                }
+                //}
             }
         }
         public string MessageText
@@ -67,7 +70,7 @@ namespace ShopManager.ViewModel
             set => Set(ref _message, value);
 
         }
-        public BindingList<Client> DataTableClient
+        public ObservableCollection<Client> DataClient
         {
             get => _dataClient;
             set => Set(ref _dataClient, value);
@@ -76,10 +79,7 @@ namespace ShopManager.ViewModel
         private bool CanSave(object p) => true;
         private async void OnSave(object p)
         {
-            _dbcontext.SaveChanges();
-
-
-
+            _dataProvader.SaveBase();
         }
         public ICommand DelClient { get; }
         public ICommand AddBase { get; }
@@ -150,16 +150,12 @@ namespace ShopManager.ViewModel
         }
         public MainWindowViewModel()
         {
-
-            _dbcontext = new();
-            _dbcontext.Clients.Load();
-            _dbcontext.Products.Load();
-            //_dbcontext.Cart.Load();
-            DataTableClient = _dbcontext.Clients.Local.ToBindingList();
-            DataProd = _dbcontext.Products.Local.ToBindingList();
-            AddToCart = new RelayCommand(OnAddToCart, CanAddToCart);
-
-            //_dbcontext.Cart.Load();
+            _dataProvader = new();
+            DataClient = new();
+            foreach (var item in _dataProvader.GetClient())
+            {
+                DataClient.Add(item);
+            }
             CommandSave = new RelayCommand(OnSave, CanSave);
         }
     }
