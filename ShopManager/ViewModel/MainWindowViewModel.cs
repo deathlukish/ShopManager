@@ -1,15 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShopManager.Command;
 using ShopManager.EFClient;
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ShopManager.ViewModel
@@ -21,7 +15,7 @@ namespace ShopManager.ViewModel
         private BindingList<Client> _dataClient;
         private Client _selectedClient;
         private BindingList<Product> _dataProd;
-        private List<Cart> _dataCart;
+        private BindingList<Cart> _dataCart;
         private string _message;
         private Product _SelectedProdInCart;
         public Product SelectedProdInCart
@@ -41,7 +35,7 @@ namespace ShopManager.ViewModel
             set => Set(ref _selectedProd, value);
 
         }
-        public List<Cart> DataCart
+        public BindingList<Cart> DataCart
         {
             get => _dataCart;
             set => Set(ref _dataCart, value);
@@ -49,22 +43,21 @@ namespace ShopManager.ViewModel
         }
         public Client SelectedClient
         {
-            get
-            {
-                if (_selectedClient != null)
-                {
-                    //DataCart = ProductBase.GetCart(_selectedClient?.Row?.Field<string>("eMail"));
-                }
-                return _selectedClient;
-            }
+            get => _selectedClient;
             set
             {
                 Set(ref _selectedClient, value);
                 if (SelectedClient != null)
                 {
-                    _dbcontext.Cart.Local.Where(e => e.eMail == SelectedClient.Email);
-                    DataCart = _dbcontext.Cart.ToList();
-                    _dbcontext.SaveChanges();
+                    DataCart = new BindingList<Cart>();
+                    // _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email);
+                    foreach (var item in _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email))
+                    {
+                        DataCart.Add(item);
+
+                    }
+                    // _dbcontext.Cart.Where(e => e.eMail == SelectedClient.Email);
+                    // _dbcontext.SaveChanges();
                 }
             }
         }
@@ -101,13 +94,14 @@ namespace ShopManager.ViewModel
         }
         private void OnAddToCart(object p)
         {
-            _dbcontext.Cart.Local.Add(new Cart()
+            DataCart.Add(new Cart()
             {
                 Count = 0,
                 eMail = _selectedClient.Email,
                 idProd = _selectedProd.id
             }
             );
+            _dbcontext.SaveChanges();
             //DataCart.Add(new Cart()
             //{
             //    Count = 0,
@@ -137,8 +131,8 @@ namespace ShopManager.ViewModel
         private bool CanDelFromCart(object p) => true;
         private void OnDelFromCart(object p)
         {
-           // SelectedProdInCart.Row.Delete();
-           
+            // SelectedProdInCart.Row.Delete();
+
         }
         private void MessageOfEvent(string text)
         {
@@ -146,25 +140,25 @@ namespace ShopManager.ViewModel
         }
         private void OnDelClient(object p)
         {
-           // SelectedClient.Row.Delete();
-     
+            // SelectedClient.Row.Delete();
+
         }
         private void LoadBases()
         {
-      
-           
+
+
         }
         public MainWindowViewModel()
         {
-            
+
             _dbcontext = new();
             _dbcontext.Clients.Load();
             _dbcontext.Products.Load();
             //_dbcontext.Cart.Load();
             DataTableClient = _dbcontext.Clients.Local.ToBindingList();
             DataProd = _dbcontext.Products.Local.ToBindingList();
-            AddToCart = new RelayCommand(OnAddToCart,CanAddToCart);
-            
+            AddToCart = new RelayCommand(OnAddToCart, CanAddToCart);
+
             //_dbcontext.Cart.Load();
             CommandSave = new RelayCommand(OnSave, CanSave);
         }
