@@ -67,7 +67,7 @@
              IsReadOnly="True"
              Margin="5">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding nameProd}" 
+                <DataGridTextColumn Binding="{Binding Name}" 
                                     Header="Наименование" Width="160*" />
                 <DataGridTextColumn Binding="{Binding Count}" 
                                     Header="Кол-во" Width="60*"/>

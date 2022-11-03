@@ -29,13 +29,18 @@ namespace ShopManager.EFobject
             _dbContext.SaveChanges();
             
         }
-        public IEnumerable<Cart> GetGart(string email)
-        {         
-          return _dbContext.Cart.Where(e=>e.eMail==email);
-        }
-        public void SaveOBS (IEnumerable<Cart> values)
+        public IEnumerable<ProdInCart> GetGart(string email)
         {
-            _dbContext.UpdateRange(values);
-        }
+            return _dbContext.Cart.Where(e => e.eMail == email).Join(_dbContext.Products,
+                p => p.idProd,
+                c => c.id,
+                (p, c) => new ProdInCart
+                {
+                    Name = c.nameProd,
+                    Count = p.Count
+                });
+
+               
+        }      
     }
 }

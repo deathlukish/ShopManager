@@ -14,7 +14,7 @@ namespace ShopManager.ViewModel
         private ObservableCollection<Client> _dataClient;
         private Client _selectedClient;
         private List<Product> _dataProd;
-        private ObservableCollection<Cart> _dataCart;
+        private ObservableCollection<ProdInCart> _dataCart;
         private string _message;
         private Product _SelectedProdInCart;
         public Product SelectedProdInCart
@@ -34,7 +34,7 @@ namespace ShopManager.ViewModel
             set => Set(ref _selectedProd, value);
 
         }
-        public ObservableCollection<Cart> DataCart
+        public ObservableCollection<ProdInCart> DataCart
         {
             get => _dataCart;
             set => Set(ref _dataCart, value);
@@ -49,7 +49,7 @@ namespace ShopManager.ViewModel
 
                 if (SelectedClient != null)
                 {
-                    DataCart = new ObservableCollection<Cart>();
+                    DataCart = new ObservableCollection<ProdInCart>();
                     foreach (var item in _dataProvader.GetGart(SelectedClient.Email))
                     {
                         DataCart.Add(item);
@@ -72,7 +72,6 @@ namespace ShopManager.ViewModel
         private bool CanSave(object p) => true;
         private async void OnSave(object p)
         {
-            //_dataProvader.SaveOBS(DataClient);
             _dataProvader.SaveBase();
         }
         public ICommand DelClient { get; }
@@ -88,51 +87,14 @@ namespace ShopManager.ViewModel
         }
         private void OnAddToCart(object p)
         {
-            DataCart.Add(new Cart()
-            {
-                Count = 0,
-                eMail = _selectedClient.Email,
-                idProd = _selectedProd.id
-            }
-            );
-            _dataProvader.SaveOBS(DataCart);
-            _dataProvader.SaveBase();
-            //DataCart.Add(new Cart()
-            //{
-            //    Count = 0,
-            //    eMail = _selectedClient.Email,
-            //    idProd = _selectedProd.id
-            //}
-            //); 
-            //_dbcontext.SaveChanges();
-            //_dbcontext.Cart.
-            //DataCart.AcceptChanges();
-            //int index = _dataCart
-            //    .AsEnumerable()
-            //    .Select(col => col.Field<string>("nameProd"))
-            //    .ToList()
-            //    .FindIndex(b => b == _selectedProd.Row.Field<string>("nameProd"));
-            //if (index == -1)
-            //
-            //    _dataCart.Rows.Add(_selectedProd.Row.ItemArray).SetField("Count", 1);
-
-            //}
-            //else
-            //{
-            //    var a = _dataCart.Rows[index].Field<int>("Count");
-            //    _dataCart.Rows[index].SetField("Count", ++a);
-            //}
+            
         }
         private bool CanDelFromCart(object p) => true;
         private void OnDelFromCart(object p)
         {
-            // SelectedProdInCart.Row.Delete();
 
-        }
-        private void MessageOfEvent(string text)
-        {
-            MessageText = text;
-        }
+
+        }       
         private void OnDelClient(object p)
         {
             // SelectedClient.Row.Delete();
