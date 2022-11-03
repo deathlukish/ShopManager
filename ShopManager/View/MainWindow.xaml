@@ -31,7 +31,8 @@
             <TextBlock Text="{Binding MessageText}"> </TextBlock>
         </StatusBar>
         <!--<Button  Content="Button" Grid.Column="1" Margin="5" Command="{Binding command}"/>-->
-        <DataGrid               
+        <DataGrid          
+             
              SelectedItem="{Binding SelectedClient}"
              AutoGenerateColumns="False"
              IsReadOnly="False"
@@ -55,6 +56,7 @@
                 <DataGridTextColumn Binding="{Binding Email}" 
                                     Header="Почта" Width="*"/>
             </DataGrid.Columns>
+            
         </DataGrid>
         <DataGrid               
              Grid.ColumnSpan="1"
