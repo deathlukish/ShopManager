@@ -25,7 +25,6 @@
         <UniformGrid Grid.Row="0" Grid.Column="2" Columns="1">
             <Button Content="Сохранить" Command="{Binding CommandSave}" Margin="5"/>
             <Button  Content="Удалить" Command="{Binding DelClient}" Margin="5"/>
-            <Button  Content="Добавить базу" Command="{Binding AddBase}" Margin="5"/>
         </UniformGrid>
         <StatusBar Grid.Row="2" Grid.ColumnSpan="3">
             <TextBlock Text="{Binding MessageText}"> </TextBlock>

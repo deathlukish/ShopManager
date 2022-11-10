@@ -1,4 +1,5 @@
-﻿using ShopManager.Command;
+﻿using Microsoft.EntityFrameworkCore;
+using ShopManager.Command;
 using ShopManager.EFClient;
 using ShopManager.EFobject;
 using System.Collections.Generic;
@@ -77,24 +78,30 @@ namespace ShopManager.ViewModel
         }
         public ICommand CommandSave { get; }
         private bool CanSave(object p) => true;
-        private async void OnSave(object p)
+        private void OnSave(object p)
         {
-            _datacontext.Clients.AddRange(DataClient);
             _datacontext.SaveChanges();
         }
         public ICommand DelClient { get; }
         public ICommand AddBase { get; }
         public ICommand AddToCart { get; }
         public ICommand DelFromCart { get; }
-        private bool CanAddToCart(object p) => true;
-        private bool CanDelCLient(object p) => true;
-        private bool CanAddBase(object p) => true;
-        private void OnAddBase(object p)
+        private bool CanAddToCart(object p)
         {
-            LoadBases();
+            if (SelectedClient != null) return true;
+            else
+            {
+                return false;
+            }
         }
+        private bool CanDelCLient(object p) => true;
         private void OnAddToCart(object p)
         {
+            _dataCart.Add(new ProdInCart
+            {
+                Name = _datacontext.Products.Local.First(e => e.id == SelectedProd.id).nameProd,
+                Count = 1
+            }); 
             _datacontext.Cart.Add(new Cart()
             {
                 eMail = SelectedClient.Email,
@@ -103,38 +110,25 @@ namespace ShopManager.ViewModel
 
             });
             _datacontext.SaveChanges();
-        }
-        private bool CanDelFromCart(object p) => true;
-        private void OnDelFromCart(object p)
-        {
-
-
-        }
+        }       
         private void OnDelClient(object p)
         {
-            // SelectedClient.Row.Delete();
-
-        }
-        private void LoadBases()
-        {
-
-
+            DataClient.Remove(SelectedClient);
         }
         public MainWindowViewModel()
         {
             _datacontext = new();
-            DataClient = new();
-            foreach (var item in _datacontext.Clients)
-            {
-                DataClient.Add(item);
-            }
-            CommandSave = new RelayCommand(OnSave, CanSave);
-            AddToCart = new RelayCommand(OnAddToCart, CanAddToCart);
             DataProd = new();
+            DataClient = new();
+            _datacontext.Clients.Load();
+            DataClient = _datacontext.Clients.Local.ToObservableCollection();
             foreach (var item in _datacontext.Products)
             {
                 DataProd.Add(item);
             }
+            CommandSave = new RelayCommand(OnSave, CanSave);
+            AddToCart = new RelayCommand(OnAddToCart, CanAddToCart);
+            DelClient = new RelayCommand(OnDelClient, CanDelCLient);
         }
     }
 }
